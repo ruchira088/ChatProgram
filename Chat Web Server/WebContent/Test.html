@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Test</title>
+</head>
+<body>
+
+<table class='table' id='onlineUserTable'>
+<tr><th>Online Users</th></tr>
+<tr><td>a</td></tr>
+<tr><td>b</td></tr>
+<tr><td>c</td></tr>
+<tr><td>d</td></tr>
+</table>
+
+<p id="demo"></p>
+
+<script>
+	var data = document.getElementsByTagName("td");
+	for( var i = 0; i < data.length; i++)
+	   {
+	   	data[i].addEventListener("click", doSomething);
+	   	
+	   }
+	
+	function doSomething(event)
+	{
+	   alert(event.srcElement.innerHTML);
+	}
+	
+	
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+
+#previewImage {
+	margin-bottom: 20px;
+	height: 200px;
+	width: 200px;
+}
+
+#profilePicture {
+	height: 300px;
+	width: 300px;
+}
+
+#messageTerminal
+{
+	height: 50px;
+	width: 300px;
+}
+
+#messageTerminal.new
+{
+	color: blue;
+}

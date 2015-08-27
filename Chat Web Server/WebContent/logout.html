@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>My Chat Program</title>
+</head>
+<body>
+	<p>
+		<span id="username">You</span> have successfully logged out.
+	</p>
+	<p>
+		<a href="/My_Chat_Program/loginForm.html">Login Page</a>
+	</p>
+</body>
+<script type="text/javascript">
+   var attributeMap;
+
+   var Attribute = function(string) {
+      var attribute = string.split("=");
+      this.key = attribute[0];
+      this.value = attribute[1];
+   };
+
+   function fetchAttribute(key) {
+      if (attributeMap == null) {
+         populateAttributeMap();
+      }
+
+      return attributeMap.get(key);
+   }
+
+   function getAttribute(key, defaultValue) {
+      var value = fetchAttribute(key);
+
+      if (value == null) {
+         value = defaultValue;
+      }
+
+      return value;
+   }
+
+   function populateAttributeMap() {
+      var url = window.location.search;
+      attributeMap = new Map();
+      if (url != "") {
+         url = url.substring(1, url.length);
+         var attributes = url.split("&");
+
+         for (i = 0; i < attributes.length; i++) {
+            var attribute = new Attribute(attributes[i]);
+
+            attributeMap.set(attribute.key, attribute.value);
+         }
+      }
+   }
+
+   document.getElementById("username").innerHTML = getAttribute("user", "You");
+</script>
+</html>
