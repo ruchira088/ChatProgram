@@ -3,6 +3,7 @@
 	<name>Chat Web Server</name>
 	<comment></comment>
 	<projects>
+		<project>Chat Server</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

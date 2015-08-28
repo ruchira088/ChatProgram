@@ -2,6 +2,9 @@
     <wb-module deploy-name="Chat Web Server">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="Chat Server.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Chat Server/Chat Server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="Chat_Web_Server"/>
         <property name="java-output-path" value="/Chat Web Server/build/classes"/>
     </wb-module>
