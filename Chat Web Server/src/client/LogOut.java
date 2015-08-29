@@ -62,7 +62,7 @@ public class LogOut extends HttpServlet
       
       
       
-//      URL url = new URL("http://localhost:8080/My_Chat_Program/off.jsp");
+//      URL url = new URL("http://localhost:8080/Chat_Web_Server/off.jsp");
 //      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 //      connection.setRequestMethod("POST");
 //      connection.setDoOutput(true);

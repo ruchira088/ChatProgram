@@ -42,7 +42,7 @@
 		Welcome
 		<%=user.getName()%></h2>
 	<p>
-		<a href="/My_Chat_Program/logout">logout</a>
+		<a href="/Chat_Web_Server/logout">logout</a>
 	</p>
 	<p>
 		<img id="profilePicture"

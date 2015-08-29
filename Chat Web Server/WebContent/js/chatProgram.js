@@ -32,7 +32,7 @@ function newUser() {
    formData.append(username.name, username.value);
 
    var request = new XMLHttpRequest();
-   request.open("POST", "/My_Chat_Program/usernameChecker");
+   request.open("POST", "/Chat_Web_Server/usernameChecker");
    request.onreadystatechange = function() {
       if (request.readyState == 4) {
          if (request.status == 200) {
@@ -63,10 +63,10 @@ function userForm(username) {
    request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
          //document.getElementById("userForm").submit();
-         window.location.replace("/My_Chat_Program/chatroom");
+         window.location.replace("/Chat_Web_Server/chatroom");
       }
    }
-   request.open("POST", "/My_Chat_Program/newUser");
+   request.open("POST", "/Chat_Web_Server/newUser");
    request.send(userForm);
 
 }
@@ -125,7 +125,7 @@ function validateForm() {
          }
       }
 
-      xmlHttpRequest.open("POST", "/My_Chat_Program/validator", true);
+      xmlHttpRequest.open("POST", "/Chat_Web_Server/validator", true);
       xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       xmlHttpRequest.send("username=" + enteredUsername + "&password=" + enteredPassword + "&validate=true");
    }

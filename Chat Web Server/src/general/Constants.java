@@ -6,7 +6,7 @@ public class Constants
    
    public static final String COOKIE_USER = "Chat-User";
    
-   public static final String PROJECT_NAME = "/My_Chat_Program";
+   public static final String PROJECT_NAME = "/Chat_Web_Server";
    
    public static final String RESOURCE_SERVER = "/resource/";
    
