@@ -235,17 +235,28 @@ public class Database
       return userExists;
    }
 
-   public void sendMessage(Message<String> p_message) throws SQLException, UnableToConnectToDatabaseException
+   public boolean sendMessage(Message<String> p_message)
    {
-      PreparedStatement preparedStatement = getConnection()
-         .prepareStatement("INSERT INTO MESSAGES_TABLE (TIMESTAMP, SENDER, RECEIVER, MESSAGE) VALUES (?, ?, ?, ?)");
-      preparedStatement.setTimestamp(1, p_message.getSentTimeStamp());
-      preparedStatement.setString(2, p_message.getSender());
-      preparedStatement.setString(3, p_message.getReceiver());
-      preparedStatement.setString(4, p_message.getMessageContents());
-
-      preparedStatement.execute();
-      preparedStatement.close();
+       boolean isSuccess = false;
+       try
+       {
+	   PreparedStatement preparedStatement = getConnection()
+		   .prepareStatement("INSERT INTO MESSAGES_TABLE (TIMESTAMP, SENDER, RECEIVER, MESSAGE) VALUES (?, ?, ?, ?)");
+	   preparedStatement.setTimestamp(1, p_message.getSentTimeStamp());
+	   preparedStatement.setString(2, p_message.getSender());
+	   preparedStatement.setString(3, p_message.getReceiver());
+	   preparedStatement.setString(4, p_message.getMessageContents());
+	   
+	   preparedStatement.execute();
+	   preparedStatement.close();	
+	   isSuccess = true;
+       }
+       catch (Exception exception)
+       {
+	   
+       }
+       
+       return isSuccess;
 
    }
 

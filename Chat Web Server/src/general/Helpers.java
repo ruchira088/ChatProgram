@@ -10,46 +10,49 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-public class Helpers
-{
-   public static Credentials getCredentialsFromCookies(HttpServletRequest p_request)
-   {
-      Credentials credentials = null;   
-      String username = null;
-      String token = null;
-      
-      List<Cookie> cookies = Collections.emptyList();
+import server.ChatServer;
 
-      if (p_request.getCookies() != null)
-      {
-         cookies = Arrays.asList(p_request.getCookies());
-      }
+public class Helpers {
+    public static Credentials getCredentialsFromCookies(HttpServletRequest p_request) {
+	Credentials credentials = null;
+	String username = null;
+	String token = null;
 
-      for (Cookie cookie : cookies)
-      {
-         String name = cookie.getName();
+	List<Cookie> cookies = Collections.emptyList();
 
-         switch (name)
-         {
-         case COOKIE_TOKEN:
-            token = cookie.getValue();
-            break;
+	if (p_request.getCookies() != null) {
+	    cookies = Arrays.asList(p_request.getCookies());
+	}
 
-         case COOKIE_USER:
-            username = cookie.getValue();
-            break;
-         default:
-            break;
-         }
-      }
-      
-      
-      if(username != null && token != null)
-      {
-         credentials = new Credentials(username, token);
-      }
-      
-      return credentials;
-   }
+	for (Cookie cookie : cookies) {
+	    String name = cookie.getName();
+
+	    switch (name) {
+	    case COOKIE_TOKEN:
+		token = cookie.getValue();
+		break;
+
+	    case COOKIE_USER:
+		username = cookie.getValue();
+		break;
+	    default:
+		break;
+	    }
+	}
+
+	if (username != null && token != null) {
+	    credentials = new Credentials(username, token);
+	}
+
+	return credentials;
+    }
+
+    public static Credentials getAuthenticatedUserFromCookie(HttpServletRequest p_request) {
+	Credentials credentials = getCredentialsFromCookies(p_request);
+	boolean isAutheticated = credentials != null
+		? ChatServer.isAuthenticatedUser(credentials.getUsername(), credentials.getToken()) : false;
+
+	return isAutheticated ? credentials : null;
+    }
 
 }

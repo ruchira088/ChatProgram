@@ -11,13 +11,20 @@
 	width: 300px;
 }
 
-#messageTerminal
-{
-	height: 50px;
-	width: 300px;
+#messageTerminal {
+	height: 100px;
+	width: 50%;
 }
 
-#messageTerminal.new
-{
+#messageHistory {
+	width: 80%;
+	height: 300px;
+}
+
+#onlineUserTable {
+	width: 50%;
+}
+
+#messageTerminal.new {
 	color: blue;
 }

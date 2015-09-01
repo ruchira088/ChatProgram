@@ -140,7 +140,7 @@ public class ChatServer
 
       if (isAuthenticatedUser(p_senderUsername, p_sessionToken))
       {
-         getDatabase().sendMessage(p_message);
+	  success= getDatabase().sendMessage(p_message);
       }
 
       return success;

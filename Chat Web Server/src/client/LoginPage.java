@@ -24,9 +24,7 @@ public class LoginPage extends HttpServlet
    @Override
    protected void doGet(HttpServletRequest p_request, HttpServletResponse p_response) throws ServletException, IOException
    {
-      Credentials credentials = Helpers.getCredentialsFromCookies(p_request);
-     
-      if(credentials != null && isAuthenticatedUser(credentials.getUsername(), credentials.getToken()))
+      if(Helpers.getAuthenticatedUserFromCookie(p_request) != null)
       {         
          p_request.getRequestDispatcher("jsp/Chatroom.jsp").forward(p_request, p_response);
     //     p_response.sendRedirect(PROJECT_NAME + Constants.CHAT_ROOM);

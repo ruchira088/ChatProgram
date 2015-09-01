@@ -37,7 +37,7 @@ public class LogOut extends HttpServlet
    @Override
    protected void doGet(HttpServletRequest p_request, HttpServletResponse p_response) throws ServletException, IOException
    {
-      Credentials credentials = Helpers.getCredentialsFromCookies(p_request);
+      Credentials credentials = Helpers.getAuthenticatedUserFromCookie(p_request);
       ChatServer chatServer = new ChatServer();
 
       if(credentials != null)

@@ -46,14 +46,6 @@ public class OnlineUsers
       }
       
       stringWriter.append("</table>");
-      
-      stringWriter.append("<script>");
-      stringWriter.append("var data = document.getElementsByTagName('td');");
-      stringWriter.append("for( var i = 0; i < data.length; i++){");
-      stringWriter.append("data[i].addEventListener('click', doSomething);}");
-//      stringWriter.append("function doSomething(event){");
-//      stringWriter.append("alert(event.srcElement.innerHTML);}");
-      stringWriter.append("</script>");
       return stringWriter.toString();
    }
    

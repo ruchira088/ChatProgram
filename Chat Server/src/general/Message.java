@@ -129,6 +129,8 @@ public class Message<T> implements Serializable
    {
       this(p_messageContents, null, p_receiver);
       
+      //TODO check this
+      
       // Removing milliseconds from the time
       long time = p_sentDate.getTime();
       m_sentTimeStamp = new Timestamp(time - time%1000);

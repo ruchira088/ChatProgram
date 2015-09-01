@@ -56,7 +56,7 @@ public class Chatroom extends HttpServlet
          stringWriter.append("<link rel='stylesheet' href='css/style.css'>");
          stringWriter.append("<script src='js/chatProgram.js'></script>");
          stringWriter.append("</head>");
-         stringWriter.append("<body><h2>Welcome " + user.getUsername() + "</h2><p><a href='/Chat_Web_Server/logout'>logout</a></p>");
+         stringWriter.append("<body onload='addListenersToUserTable(document.getElementById(\"onlineUserTable\"))'><h2>Welcome " + user.getUsername() + "</h2><p><a href='/Chat_Web_Server/logout'>logout</a></p>");
          stringWriter.append("<p><img id='profilePicture' src='" + Constants.PROJECT_NAME + Constants.RESOURCE_SERVER + user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH) + "' alt=''</p>");
          stringWriter.append("<p>name : " + user.getAttribute(UserAttributes.NAME) + "</p>");
          stringWriter.append("<p>gender : " + user.getAttribute(UserAttributes.GENDER) + "</p>");
