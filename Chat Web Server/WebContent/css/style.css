@@ -25,10 +25,6 @@
 	width: 50%;
 }
 
-#messageTerminal.new {
-	color: blue;
-}
-
 .onlineUserProfilePictures
 {
 	height: 50px;
@@ -36,6 +32,11 @@
 }
 
 tbody tr:hover
+{
+	background-color: #5fb9ff;
+}
+
+[data-receiver]
 {
 	background-color: #5fb9ff;
 }

@@ -12,47 +12,54 @@ import javax.servlet.http.HttpServletRequest;
 
 import server.ChatServer;
 
-public class Helpers {
-    public static Credentials getCredentialsFromCookies(HttpServletRequest p_request) {
-	Credentials credentials = null;
-	String username = null;
-	String token = null;
+public class Helpers
+{
+	public static Credentials getCredentialsFromCookies(HttpServletRequest p_request)
+	{
+		Credentials credentials = null;
+		String username = null;
+		String token = null;
 
-	List<Cookie> cookies = Collections.emptyList();
+		List<Cookie> cookies = Collections.emptyList();
 
-	if (p_request.getCookies() != null) {
-	    cookies = Arrays.asList(p_request.getCookies());
+		if (p_request.getCookies() != null)
+		{
+			cookies = Arrays.asList(p_request.getCookies());
+		}
+
+		for (Cookie cookie : cookies)
+		{
+			String name = cookie.getName();
+
+			switch (name)
+			{
+			case COOKIE_TOKEN:
+				token = cookie.getValue();
+				break;
+
+			case COOKIE_USER:
+				username = cookie.getValue();
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (username != null && token != null)
+		{
+			credentials = new Credentials(username, token);
+		}
+
+		return credentials;
 	}
 
-	for (Cookie cookie : cookies) {
-	    String name = cookie.getName();
+	public static Credentials getAuthenticatedUserFromCookie(HttpServletRequest p_request)
+	{
+		Credentials credentials = getCredentialsFromCookies(p_request);
+		boolean isAutheticated = credentials != null
+				? ChatServer.isAuthenticatedUser(credentials.getUsername(), credentials.getToken()) : false;
 
-	    switch (name) {
-	    case COOKIE_TOKEN:
-		token = cookie.getValue();
-		break;
-
-	    case COOKIE_USER:
-		username = cookie.getValue();
-		break;
-	    default:
-		break;
-	    }
+		return isAutheticated ? credentials : null;
 	}
-
-	if (username != null && token != null) {
-	    credentials = new Credentials(username, token);
-	}
-
-	return credentials;
-    }
-
-    public static Credentials getAuthenticatedUserFromCookie(HttpServletRequest p_request) {
-	Credentials credentials = getCredentialsFromCookies(p_request);
-	boolean isAutheticated = credentials != null
-		? ChatServer.isAuthenticatedUser(credentials.getUsername(), credentials.getToken()) : false;
-
-	return isAutheticated ? credentials : null;
-    }
 
 }

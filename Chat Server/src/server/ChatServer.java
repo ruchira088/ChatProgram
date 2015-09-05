@@ -20,265 +20,268 @@ import server.database.Database;
  */
 public class ChatServer
 {
-   public static Map<String, SessionToken> s_tokenMap = new HashMap<String, SessionToken>();
+	public static Map<String, SessionToken> s_tokenMap = new HashMap<String, SessionToken>();
 
-   private Database m_database = new Database();
+	private Database m_database = new Database();
 
-   public String createUser(String p_username, String p_password, Map<UserAttributes, String> p_attributes) throws Exception
-   {
-      if (isExistingUsername(p_username))
-      {
-         throw new UsernameAlreadyExistsException(p_username);
-      }
+	public String createUser(String p_username, String p_password, Map<UserAttributes, String> p_attributes)
+			throws Exception
+	{
+		if (isExistingUsername(p_username))
+		{
+			throw new UsernameAlreadyExistsException(p_username);
+		}
 
-      User user = new User(p_username, p_password, p_attributes);
-      getDatabase().addUser(user);
+		User user = new User(p_username, p_password, p_attributes);
+		getDatabase().addUser(user);
 
-      return login(p_username, p_password);
-   }
-   
-   public void addImage(Image p_image) throws SQLException, UnableToConnectToDatabaseException
-   {
-      getDatabase().addImage(p_image.getId(), p_image.getName(), p_image.getImageData());
-   }
+		return login(p_username, p_password);
+	}
 
-   public byte[] getImage(String p_id, String p_name) throws Exception
-   {
-      return getDatabase().getImage(p_id, p_name);
-   }
-   /**
-    * Creates a new user and registers the user in the token map. Returns an unique token for the authenticated user.
-    * 
-    * @param p_username
-    *   Username of the user
-    * @param p_password
-    *   Password of the user
-    * @return
-    *   Unique token for the authenticated user
-    * @throws Exception
-    */
-   public String createUser(String p_username, String p_password) throws Exception
-   {
-      return createUser(p_username, p_password, new HashMap<UserAttributes, String>());
-   }
+	public void addImage(Image p_image) throws SQLException, UnableToConnectToDatabaseException
+	{
+		getDatabase().addImage(p_image.getId(), p_image.getName(), p_image.getImageData());
+	}
 
-   /**
-    * Checks whether an user name already exists.
-    * 
-    * @param p_username
-    *   Username of the user
-    * @return
-    *   <code>true</code> if the user exists, and <code>false</code> if otherwise
-    * @throws Exception
-    */
-   public boolean isExistingUsername(String p_username) throws Exception
-   {
-      boolean exists = getTokenMap().get(p_username) == null ? false : true;
+	public byte[] getImage(String p_id, String p_name) throws Exception
+	{
+		return getDatabase().getImage(p_id, p_name);
+	}
 
-      if (!exists)
-      {
-         exists = getDatabase().isExistingUsername(p_username);
-      }
+	/**
+	 * Creates a new user and registers the user in the token map. Returns an
+	 * unique token for the authenticated user.
+	 * 
+	 * @param p_username
+	 *            Username of the user
+	 * @param p_password
+	 *            Password of the user
+	 * @return Unique token for the authenticated user
+	 * @throws Exception
+	 */
+	public String createUser(String p_username, String p_password) throws Exception
+	{
+		return createUser(p_username, p_password, new HashMap<UserAttributes, String>());
+	}
 
-      return exists;
-   }
+	/**
+	 * Checks whether an user name already exists.
+	 * 
+	 * @param p_username
+	 *            Username of the user
+	 * @return <code>true</code> if the user exists, and <code>false</code> if
+	 *         otherwise
+	 * @throws Exception
+	 */
+	public boolean isExistingUsername(String p_username) throws Exception
+	{
+		boolean exists = getTokenMap().get(p_username) == null ? false : true;
 
-   /**
-    * getTokenMap description
-    * @return
-    */
-   private static Map<String, SessionToken> getTokenMap()
-   {
-      return s_tokenMap;
-   }
+		if (!exists)
+		{
+			exists = getDatabase().isExistingUsername(p_username);
+		}
 
-   /**
-    * Register an user in the token map and returns an unique token for the authenticated user.
-    * 
-    * @param p_username
-    *   Username of the user
-    * @param p_password
-    *   Password of the user
-    * @return
-    *   Unique token for the authenticated user
-    * @throws Exception
-    */
-   public String login(String p_username, String p_password) throws Exception
-   {
-      String token = null;
+		return exists;
+	}
 
-      User user = getDatabase().getUser(p_username, p_password);
+	/**
+	 * getTokenMap description
+	 * 
+	 * @return
+	 */
+	private static Map<String, SessionToken> getTokenMap()
+	{
+		return s_tokenMap;
+	}
 
-      if (user != null)
-      {
-         SessionToken sessionToken = new SessionToken();
-         getTokenMap().putIfAbsent(p_username, sessionToken);
+	/**
+	 * Register an user in the token map and returns an unique token for the
+	 * authenticated user.
+	 * 
+	 * @param p_username
+	 *            Username of the user
+	 * @param p_password
+	 *            Password of the user
+	 * @return Unique token for the authenticated user
+	 * @throws Exception
+	 */
+	public String login(String p_username, String p_password) throws Exception
+	{
+		String token = null;
 
-         token = getTokenMap().get(p_username).getId();
-      }
+		User user = getDatabase().getUser(p_username, p_password);
 
-      return token;
-   }
+		if (user != null)
+		{
+			SessionToken sessionToken = new SessionToken();
+			getTokenMap().putIfAbsent(p_username, sessionToken);
 
-   /**
-    * Sends a message.
-    * 
-    * @param p_senderUsername
-    *   The user name of the sender
-    * @param p_sessionToken
-    *   The unique token of the authenticated sender
-    * @param p_message
-    *   The message being sent
-    * @return
-    *   <code>true</code> if the message was successfully sent, and <code>false</code> if otherwise.
-    * @throws Exception
-    */
-   public boolean sendMessage(String p_senderUsername, String p_sessionToken, Message<String> p_message) throws Exception
-   {
-      boolean success = false;
-      p_message.setSender(p_senderUsername);
+			token = getTokenMap().get(p_username).getId();
+		}
 
-      if (isAuthenticatedUser(p_senderUsername, p_sessionToken))
-      {
-	  success= getDatabase().sendMessage(p_message);
-      }
+		return token;
+	}
 
-      return success;
-   }
+	/**
+	 * Sends a message.
+	 * 
+	 * @param p_senderUsername
+	 *            The user name of the sender
+	 * @param p_sessionToken
+	 *            The unique token of the authenticated sender
+	 * @param p_message
+	 *            The message being sent
+	 * @return <code>true</code> if the message was successfully sent, and
+	 *         <code>false</code> if otherwise.
+	 * @throws Exception
+	 */
+	public boolean sendMessage(String p_senderUsername, String p_sessionToken, Message<String> p_message)
+			throws Exception
+	{
+		boolean success = false;
+		p_message.setSender(p_senderUsername);
 
-   /**
-    * Checks whether the user is authenticated.
-    * 
-    * @param p_username
-    *   User name of the user
-    * @param p_sessionToken
-    *   Unique token of the authenticated user
-    * @return
-    *   <code>true</code> if the user is authenticated and <code>false</code> if otherwise.
-    */
-   public static boolean isAuthenticatedUser(String p_username, String p_sessionToken)
-   {
-      SessionToken sessionToken = new SessionToken(p_sessionToken);
+		if (isAuthenticatedUser(p_senderUsername, p_sessionToken))
+		{
+			success = getDatabase().sendMessage(p_message);
+		}
 
-      return sessionToken.equals(getTokenMap().get(p_username));
-   }
+		return success;
+	}
 
-   public String getUserAttribute(String p_username, String p_sessionToken, UserAttributes p_userAttribute) throws Exception
-   {
-      String attribute = null;
+	/**
+	 * Checks whether the user is authenticated.
+	 * 
+	 * @param p_username
+	 *            User name of the user
+	 * @param p_sessionToken
+	 *            Unique token of the authenticated user
+	 * @return <code>true</code> if the user is authenticated and
+	 *         <code>false</code> if otherwise.
+	 */
+	public static boolean isAuthenticatedUser(String p_username, String p_sessionToken)
+	{
+		SessionToken sessionToken = new SessionToken(p_sessionToken);
 
-      if (isAuthenticatedUser(p_username, p_sessionToken))
-      {
-         User user = getDatabase().getUser(p_username);
-         attribute = user.getAttribute(p_userAttribute);
-      }
+		return sessionToken.equals(getTokenMap().get(p_username));
+	}
 
-      return attribute;
-   }
+	public String getUserAttribute(String p_username, String p_sessionToken, UserAttributes p_userAttribute)
+			throws Exception
+	{
+		String attribute = null;
 
-   /**
-    * getDatabase description
-    * @return
-    */
-   private Database getDatabase()
-   {
-      return m_database;
-   }
-   
-   public Set<User> getOnlineUsers()
-   {
-      HashSet<User> onlineUsers = new HashSet<User>();
-      
-      for(String username : getTokenMap().keySet())
-      {
-         try
-         {
-            onlineUsers.add(getDatabase().getUser(username));
-         }
-         catch (Exception e)
-         {
-            
-         }      
-      }      
-      
-      return onlineUsers;
-   }
-   
-   public User getUser(String p_username) throws Exception
-   {
-      return getDatabase().getUser(p_username);
-   }
+		if (isAuthenticatedUser(p_username, p_sessionToken))
+		{
+			User user = getDatabase().getUser(p_username);
+			attribute = user.getAttribute(p_userAttribute);
+		}
 
-   /**
-    * Gets a {@link LinkedList} of {@link Message} sent for the user.
-    * 
-    * @param p_username
-    *   User name of the user
-    * @param p_sessionToken
-    *   Unique token of the authenticated user
-    * @return
-    *   {@link LinkedList} of {@link Message} sent to the user
-    * @throws Exception
-    */
-   public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken) throws Exception
-   {
-      LinkedList<Message<String>> messages = new LinkedList<Message<String>>();
+		return attribute;
+	}
 
-      if (isAuthenticatedUser(p_username, p_sessionToken))
-      {
-         messages = getDatabase().getMessages(p_username, null);
-      }
+	/**
+	 * getDatabase description
+	 * 
+	 * @return
+	 */
+	private Database getDatabase()
+	{
+		return m_database;
+	}
 
-      return messages;
-   }
+	public Set<User> getOnlineUsers()
+	{
+		HashSet<User> onlineUsers = new HashSet<User>();
 
-   /**
-    * Gets a {@link LinkedList} of {@link Message} sent by the user.
-    * 
-    * @param p_username
-    *   User name of the user
-    * @param p_sessionToken
-    *   Unique token of the authenticated user
-    * @return
-    *   {@link LinkedList} of {@link Message} sent by the user.
-    * @throws Exception
-    */
-   public LinkedList<Message<String>> getSentMessages(String p_username, String p_sessionToken) throws Exception
-   {
-      LinkedList<Message<String>> messages = new LinkedList<Message<String>>();
+		for (String username : getTokenMap().keySet())
+		{
+			try
+			{
+				onlineUsers.add(getDatabase().getUser(username));
+			} catch (Exception e)
+			{
 
-      if (isAuthenticatedUser(p_username, p_sessionToken))
-      {
-         getDatabase().getSentMessages(p_username, null);
-      }
+			}
+		}
 
-      return messages;
-   }
+		return onlineUsers;
+	}
 
-   public static ChatServer getChatServer()
-   {
-      return new ChatServer();
-   }
-   /**
-    * Logs out the user.
-    * 
-    * @param p_username
-    *   User name of the user
-    * @param p_session
-    *   Unique token of the authenticated user
-    * @throws UnauthorisedOperationException
-    */
-   public void logout(String p_username, String p_session) throws UnauthorisedOperationException
-   {
-      SessionToken sessionToken = new SessionToken(p_session);
+	public User getUser(String p_username) throws Exception
+	{
+		return getDatabase().getUser(p_username);
+	}
 
-      if (sessionToken.equals(getTokenMap().get(p_username)))
-      {
-         getTokenMap().remove(p_username);
-      }
-      else
-      {
-         throw new UnauthorisedOperationException();
-      }
-   }
+	/**
+	 * Gets a {@link LinkedList} of {@link Message} sent for the user.
+	 * 
+	 * @param p_username
+	 *            User name of the user
+	 * @param p_sessionToken
+	 *            Unique token of the authenticated user
+	 * @return {@link LinkedList} of {@link Message} sent to the user
+	 * @throws Exception
+	 */
+	public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken) throws Exception
+	{
+		LinkedList<Message<String>> messages = null;
+
+		if (isAuthenticatedUser(p_username, p_sessionToken))
+		{
+			messages = getDatabase().getMessages(p_username, null);
+		}
+
+		return messages;
+	}
+
+	/**
+	 * Gets a {@link LinkedList} of {@link Message} sent by the user.
+	 * 
+	 * @param p_username
+	 *            User name of the user
+	 * @param p_sessionToken
+	 *            Unique token of the authenticated user
+	 * @return {@link LinkedList} of {@link Message} sent by the user.
+	 * @throws Exception
+	 */
+	public LinkedList<Message<String>> getSentMessages(String p_username, String p_sessionToken) throws Exception
+	{
+		LinkedList<Message<String>> messages = new LinkedList<Message<String>>();
+
+		if (isAuthenticatedUser(p_username, p_sessionToken))
+		{
+			getDatabase().getSentMessages(p_username, null);
+		}
+
+		return messages;
+	}
+
+	public static ChatServer getChatServer()
+	{
+		return new ChatServer();
+	}
+
+	/**
+	 * Logs out the user.
+	 * 
+	 * @param p_username
+	 *            User name of the user
+	 * @param p_session
+	 *            Unique token of the authenticated user
+	 * @throws UnauthorisedOperationException
+	 */
+	public void logout(String p_username, String p_session) throws UnauthorisedOperationException
+	{
+		SessionToken sessionToken = new SessionToken(p_session);
+
+		if (sessionToken.equals(getTokenMap().get(p_username)))
+		{
+			getTokenMap().remove(p_username);
+		} else
+		{
+			throw new UnauthorisedOperationException();
+		}
+	}
 }

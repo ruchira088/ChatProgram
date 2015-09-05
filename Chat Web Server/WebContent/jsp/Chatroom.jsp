@@ -23,8 +23,7 @@
 <link rel="stylesheet" href="css/style.css">
 <title>Chatroom</title>
 </head>
-<body
-	onload='addListenersToUserTable(document.getElementById("onlineUserTable"))'>
+<body onload='initialize()'>
 	<div class="container">
 		<%
 		    Credentials credentials = Helpers.getAuthenticatedUserFromCookie(request);
@@ -87,8 +86,24 @@
 		</div>
 		<div>
 			<textarea cols="2" id="messageHistory">
-			
-		</textarea>
+
+        </textarea>
+		</div>
+		<div>
+			<div>
+				<input type="button" onclick="getMessages('<%=user.getName()%>')" value="Get Messages">
+			</div>
+			<table id='inbox'>
+				<thead>
+					<tr>
+						<th>Sender</th>
+						<th>Message</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
 		</div>
 		<%
 		    }

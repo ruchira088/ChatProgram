@@ -4,19 +4,39 @@
 
 var g_uploadFile;
 
-var g_recipient;
+var g_receiver;
+
+function initialize()
+{
+    addListenersToUserTable(document.getElementById("onlineUserTable"));
+}
+
+function setReceiver(userRow, data)
+{
+    for (var i = 0; i < data.length; i++)
+    {
+        data[i].removeAttribute("data-receiver");
+    }
+
+    userRow.setAttribute("data-receiver", "true");
+}
 
 function addListenersToUserTable(table) {
+
     var data = table.querySelectorAll("tbody tr[data-user-name]");
 
     for (var i = 0; i < data.length; i++) 
     {
     	function addListener() 
     	{
-            var name = data[i].getAttribute("data-user-name");
-			data[i].addEventListener("click", function()
+    		var userRow = data[i];
+    		var name = userRow.getAttribute("data-user-name");
+    		
+    		userRow.addEventListener("click", function()
             {
-                alert(name);
+                setReceiver(userRow, data);
+                g_receiver = name;
+                console.log(name);
             });
 		}
 
@@ -25,9 +45,6 @@ function addListenersToUserTable(table) {
     }
 }
 
-function getRecipient() {
-    return g_recipient;
-}
 
 function drop(event, element) {
     var file = event.dataTransfer.files[0];
@@ -67,7 +84,7 @@ function sendMessage() {
 
     var formData = new FormData();
     formData.append("message", message);
-    formData.append("recipient", "Hello");
+    formData.append("recipient", g_receiver);
 
     var messageRequest = new XMLHttpRequest();
     messageRequest.onreadystatechange = function () {
@@ -81,6 +98,24 @@ function sendMessage() {
     messageRequest.open("POST", "/Chat_Web_Server/messageServer");
     messageRequest.send(formData);
 
+}
+
+function getMessages(username)
+{
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function ()
+    {
+        if(request.readyState == 4 && request.status == 200)
+        {
+            console.log(request.responseText);
+        }
+    }
+
+    request.open("GET", "/Chat_Web_Server/messageServer?username=" + username);
+    request.send();
+
+    console.log("Fetching Messages.");
 }
 
 function userForm(username) {
