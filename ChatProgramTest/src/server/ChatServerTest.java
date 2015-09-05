@@ -71,20 +71,12 @@ public class ChatServerTest
       
       List<Message<String>> messages = getChatServer().getMessages(USERNAME_1, token_1);
       
-      System.out.println(messages);
+      System.out.println("getMessages() : " + messages);
+      System.out.println("getSentMessages() : " + getChatServer().getSentMessages(USERNAME_2, token_2));
       
       Assert.assertTrue("The message was sent and received successfully.", messages.contains(message));
       
    }
-   
-   @Test
-   public void getMessages() throws Exception
-   {
-      String loginToken = getChatServer().login(USERNAME_1, PASSWORD_1);
-      
-      System.out.println(getChatServer().getSentMessages(USERNAME_1, loginToken));
-   }
-   
 
    private ChatServer getChatServer()
    {

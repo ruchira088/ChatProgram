@@ -248,11 +248,11 @@ public class ChatServer
 	 */
 	public LinkedList<Message<String>> getSentMessages(String p_username, String p_sessionToken) throws Exception
 	{
-		LinkedList<Message<String>> messages = new LinkedList<Message<String>>();
+		LinkedList<Message<String>> messages = null;
 
 		if (isAuthenticatedUser(p_username, p_sessionToken))
 		{
-			getDatabase().getSentMessages(p_username, null);
+			messages = getDatabase().getSentMessages(p_username, null);
 		}
 
 		return messages;
