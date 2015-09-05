@@ -1,4 +1,5 @@
 
+<%@page import="java.util.Set"%>
 <%@page import="server.User.UserAttributes"%>
 <%@page import="general.Constants"%>
 <%@page import="server.User"%>
@@ -26,16 +27,15 @@
 	onload='addListenersToUserTable(document.getElementById("onlineUserTable"))'>
 	<div class="container">
 		<%
-			Credentials credentials = Helpers.getAuthenticatedUserFromCookie(request);
+		    Credentials credentials = Helpers.getAuthenticatedUserFromCookie(request);
 
-			if (credentials  != null) {
+		    if (credentials != null) {
 				ChatServer chatServer = new ChatServer();
-				OnlineUsers onlineUsers = new OnlineUsers();
 
 				User user = null;
 
 				try {
-					user = chatServer.getUser(credentials.getUsername());
+				    user = chatServer.getUser(credentials.getUsername());
 				} catch (Exception exception) {
 
 				}
@@ -52,14 +52,38 @@
 		<p>
 			<img id="profilePicture" class="img-circle img-responsive"
 				src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
-							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>
+			    + user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>
         ">
 		</p>
 		<div class="table-responsive">
-			<%=onlineUsers.getTableMarkup()%>
+			<table class='table' id='onlineUserTable'>
+				<thead>
+					<tr>
+						<th>Online Users</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<%
+					    Set<User> onlineUsers = chatServer.getOnlineUsers();
+
+							    for (User onlineUser : onlineUsers) {
+					%>
+					<tr data-user-name='<%=onlineUser.getUsername()%>'>
+						<td><%=onlineUser.getName()%></td>
+						<td><img
+							class='onlineUserProfilePictures img-circle img-responsive'
+							src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
+					</tr>
+					<%
+					    }
+					%>
+				</tbody>
+			</table>
 		</div>
 		<div>
-			<textarea id="messageTerminal" placeholder="Enter a message"></textarea> <button id="sendBtn" onclick="sendMessage()">Send</button>
+			<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
+			<button id="sendBtn" onclick="sendMessage()">Send</button>
 		</div>
 		<div>
 			<textarea cols="2" id="messageHistory">
@@ -67,10 +91,10 @@
 		</textarea>
 		</div>
 		<%
-			}
-			} else {
+		    }
+		    } else {
 				response.sendRedirect(Constants.PROJECT_NAME + Constants.LOGIN_FORM);
-			}
+		    }
 		%>
 	</div>
 </body>

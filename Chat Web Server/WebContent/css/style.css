@@ -28,3 +28,14 @@
 #messageTerminal.new {
 	color: blue;
 }
+
+.onlineUserProfilePictures
+{
+	height: 50px;
+	width: 50px;
+}
+
+tbody tr:hover
+{
+	background-color: #5fb9ff;
+}

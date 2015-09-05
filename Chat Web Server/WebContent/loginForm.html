@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>My Chat Program</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	
-<script src="js/chatProgram.js"></script>
+    <meta charset="utf-8">
+    <title>My Chat Program</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Cache-Control" content="no-store">
+    <link rel="stylesheet"
+          href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script
+            src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="js/chatProgram.js"></script>
 
 </head>
 
 <body>
-	<div class="container">
-		<div id="heading" class="jumbotron" style="margin-top: 20px;">
-			<h1>Login Page</h1>
-		</div>
-		<form id="loginForm" action="/Chat_Web_Server/validator" method="POST">
-			<div class="form-group">
-				<label for="username">Username:</label> <input type="text"
-					class="form-control" id="username" name="username">
-			</div>
-			<div class="form-group">
-				<label for="password">Password:</label> <input type="password"
-					class="form-control" id="password" name="password">
-			</div>
-			<input type="button" class="btn btn-default" onclick="validateForm()"
-				value="Submit"></input> <a href="/Chat_Web_Server/newUser" style="padding-left: 20px;">Sign
-				up</a>
-		</form>
-		<br />
-		<div class="alert alert-danger fade in" id="invalidCredentials"
-			style="display: none;">
-			<a class="close" data-dismiss="alert">&times;</a> Incorrect
-			credentials
-		</div>
-		<div class="alert alert-danger fade in" id="noUsername"
-			style="display: none;">
-			<a class="close" data-dismiss="alert">&times;</a> Please enter an
-			username
-		</div>
-		<div class="alert alert-danger fade in" id="noPassword"
-			style="display: none;">
-			<a class="close" data-dismiss="alert">&times;</a>Please enter a
-			password
-		</div>
-		<script type="text/javascript"></script>
-	</div>
+<div class="container">
+    <div id="heading" class="jumbotron" style="margin-top: 20px;">
+        <h1>Login Page</h1>
+    </div>
+    <form id="loginForm" action="/Chat_Web_Server/validator" method="POST">
+        <div class="form-group">
+            <label for="username">Username:</label> <input type="text"
+                                                           class="form-control" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label> <input type="password"
+                                                           class="form-control" id="password" name="password">
+        </div>
+        <input type="button" class="btn btn-default" onclick="validateForm()"
+               value="Submit"></input> <a href="/Chat_Web_Server/newUser" style="padding-left: 20px;">Sign
+        up</a>
+    </form>
+    <br/>
+
+    <div class="alert alert-danger fade in" id="invalidCredentials"
+         style="display: none;">
+        <a class="close" data-dismiss="alert">&times;</a> Incorrect
+        credentials
+    </div>
+    <div class="alert alert-danger fade in" id="noUsername"
+         style="display: none;">
+        <a class="close" data-dismiss="alert">&times;</a> Please enter an
+        username
+    </div>
+    <div class="alert alert-danger fade in" id="noPassword"
+         style="display: none;">
+        <a class="close" data-dismiss="alert">&times;</a>Please enter a
+        password
+    </div>
+    <script type="text/javascript"></script>
+</div>
 
 </body>
 
