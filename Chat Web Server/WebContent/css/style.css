@@ -7,8 +7,9 @@
 }
 
 #profilePicture {
-	height: 300px;
-	width: 300px;
+	position: fixed;
+	height: 25%;
+	width: 25%;
 }
 
 #messageTerminal {
@@ -18,7 +19,7 @@
 
 #messageHistory {
 	width: 80%;
-	height: 300px;
+	height: 10%;
 }
 
 #onlineUserTable {
@@ -39,4 +40,12 @@ tbody tr:hover
 [data-receiver]
 {
 	background-color: #5fb9ff;
+}
+
+#inbox
+{
+	position: absolute;
+	width: 60%;
+	top: 10%;
+	left: 40%;
 }

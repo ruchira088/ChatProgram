@@ -124,7 +124,7 @@ public class Message<T> implements Serializable
 	@Override
 	public String toString()
 	{
-		return "{\"messageContents\" : \"" + m_messageContents + "\", \"timeStamp\" : \"" + m_sentTimeStamp
+		return "{\"messageContents\" : \"" + m_messageContents + "\", \"time\" : \"" + m_sentTimeStamp
 				+ "\", \"sender\" : \"" + m_sender + "\", \"receiver\" : \"" + m_receiver + "\"}";
 	}
 

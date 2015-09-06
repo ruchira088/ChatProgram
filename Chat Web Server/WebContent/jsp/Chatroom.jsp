@@ -26,20 +26,25 @@
 <body onload='initialize()'>
 	<div class="container">
 		<%
-		    Credentials credentials = Helpers.getAuthenticatedUserFromCookie(request);
+			Credentials credentials = Helpers.getAuthenticatedUserFromCookie(request);
 
-		    if (credentials != null) {
+			if (credentials != null)
+			{
 				ChatServer chatServer = new ChatServer();
 
 				User user = null;
 
-				try {
-				    user = chatServer.getUser(credentials.getUsername());
-				} catch (Exception exception) {
+				try
+				{
+					user = chatServer.getUser(credentials.getUsername());
+				}
+				catch (Exception exception)
+				{
 
 				}
 
-				if (user != null) {
+				if (user != null)
+				{
 		%>
 		<h2>
 			Hi
@@ -51,7 +56,7 @@
 		<p>
 			<img id="profilePicture" class="img-circle img-responsive"
 				src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
-			    + user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>
+							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>
         ">
 		</p>
 		<div class="table-responsive">
@@ -64,9 +69,10 @@
 				</thead>
 				<tbody>
 					<%
-					    Set<User> onlineUsers = chatServer.getOnlineUsers();
+						Set<User> onlineUsers = chatServer.getOnlineUsers();
 
-							    for (User onlineUser : onlineUsers) {
+								for (User onlineUser : onlineUsers)
+								{
 					%>
 					<tr data-user-name='<%=onlineUser.getUsername()%>'>
 						<td><%=onlineUser.getName()%></td>
@@ -75,7 +81,7 @@
 							src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
 					</tr>
 					<%
-					    }
+						}
 					%>
 				</tbody>
 			</table>
@@ -85,18 +91,18 @@
 			<button id="sendBtn" onclick="sendMessage()">Send</button>
 		</div>
 		<div>
-			<textarea cols="2" id="messageHistory">
-
-        </textarea>
+			<textarea id="messageHistory"></textarea>
 		</div>
 		<div>
 			<div>
-				<input type="button" onclick="getMessages('<%=user.getName()%>')" value="Get Messages">
+				<input type="button" onclick="getMessages('<%=user.getName()%>')"
+					value="Get Messages">
 			</div>
 			<table id='inbox'>
 				<thead>
 					<tr>
 						<th>Sender</th>
+						<th>Time</th>
 						<th>Message</th>
 					</tr>
 				</thead>
@@ -106,10 +112,12 @@
 			</table>
 		</div>
 		<%
-		    }
-		    } else {
+			}
+			}
+			else
+			{
 				response.sendRedirect(Constants.PROJECT_NAME + Constants.LOGIN_FORM);
-		    }
+			}
 		%>
 	</div>
 </body>

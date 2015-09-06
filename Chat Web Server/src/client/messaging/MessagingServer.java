@@ -101,8 +101,9 @@ public class MessagingServer extends HttpServlet
 
 			LinkedList<Message<String>> messages = chatServer.getMessages(p_credentials.getUsername(),
 					p_credentials.getToken());
-			
-			PrintWriter writer = p_response.getWriter();
+						
+			PrintWriter writer = p_response.getWriter();					
+			writer.println(messages);
 			
 			writer.flush();
 			writer.close();
