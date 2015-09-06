@@ -132,18 +132,21 @@ public class Message<T> implements Serializable
 	{
 		this(p_messageContents, null, p_receiver);
 
-		// TODO check this
-
-		// Removing milliseconds from the time
-		long time = p_sentDate.getTime();
-		m_sentTimeStamp = new Timestamp(time - time % 1000);
+		// The database can only store the time stamp to an accuracy of seconds. Therefore, we want to round the time to 
+		// the nearest second.
+		m_sentTimeStamp = roundToNearestSecondAndSetTimestamp(p_sentDate.getTime());
 	}
 
 	public Message(T p_messageContents, Timestamp p_timestamp, String p_receiver)
 	{
 		m_messageContents = p_messageContents;
-		m_sentTimeStamp = p_timestamp;
 		m_receiver = p_receiver;
+		m_sentTimeStamp = p_timestamp != null ? roundToNearestSecondAndSetTimestamp(p_timestamp.getTime()): null;
+	}
+	
+	private Timestamp roundToNearestSecondAndSetTimestamp(long p_time)
+	{
+		return new Timestamp(Math.round(((double)p_time)/1000)*1000);
 	}
 
 }
