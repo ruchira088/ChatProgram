@@ -48,7 +48,7 @@ function addListenersToUserTable(table) {
 
 function drop(event, element) {
     var file = event.dataTransfer.files[0];
-    setPreviewImageAnsSetAsUploadFile(event.dataTransfer.files[0]);
+    setPreviewImageAndSetAsUploadFile(event.dataTransfer.files[0]);
     event.preventDefault();
 }
 
