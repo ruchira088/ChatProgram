@@ -50,7 +50,7 @@
 			Hi
 			<%=user.getName()%>,
 		</h2>
-		<div id="leftColumn">
+		<div class="leftColumn">
 
 			<p>
 				<a href="/Chat_Web_Server/logout">logout</a>
@@ -60,6 +60,23 @@
 					src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
 							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>">
 			</p>
+
+			<div>
+				<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
+				<br/>
+				<button id="sendBtn" onclick="sendMessage()">Send</button>
+			</div>
+			<div>
+				<textarea id="messageHistory"></textarea>
+			</div>
+			<div>
+				<input type="button" onclick="getMessages('<%=user.getName()%>')"
+					value="Get Messages">
+			</div>
+		</div>
+
+		<div class="rightColumn">
+
 			<div class="table-responsive">
 				<table class='table' id='onlineUserTable'>
 					<thead>
@@ -87,21 +104,8 @@
 					</tbody>
 				</table>
 			</div>
-			<div>
-				<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
-				<button id="sendBtn" onclick="sendMessage()">Send</button>
-			</div>
-			<div>
-				<textarea id="messageHistory"></textarea>
-			</div>
-			<div>
-				<input type="button" onclick="getMessages('<%=user.getName()%>')"
-					value="Get Messages">
-			</div>
 		</div>
-
-		<div id="rightColumn">
-
+		<div class="fullColumn">
 			<table id='inbox'>
 				<thead>
 					<tr>
@@ -114,6 +118,7 @@
 
 				</tbody>
 			</table>
+
 		</div>
 		<%
 			}

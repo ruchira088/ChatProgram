@@ -4,6 +4,8 @@
 
 var g_uploadFile;
 
+var g_displayedMessages;
+
 var g_receiver;
 
 function initialize() {
@@ -83,8 +85,7 @@ function sendMessage() {
 
 		var messageRequest = new XMLHttpRequest();
 		messageRequest.onreadystatechange = function() {
-			if (messageRequest.readyState == 4 && messageRequest.status == 200)
-            {
+			if (messageRequest.readyState == 4 && messageRequest.status == 200) {
 				var messageHistory = document.getElementById("messageHistory");
 				messageHistory.innerHTML = message + "\n"
 						+ messageHistory.innerHTML;
@@ -116,6 +117,14 @@ function getMessages(username) {
 
 function displayMessages(response) {
 	var messages = JSON.parse(response);
+
+	if (g_displayedMessages) {
+		var temp = messages;
+		messages = messages.splice(g_displayedMessages.length, messages.length);
+		g_displayedMessages = temp.concat(messages);
+	} else {
+		g_displayedMessages = messages;
+	}
 
 	for (var i = 0; i < messages.length; i++) {
 		insertIntoMessageTable(messages[i]);
