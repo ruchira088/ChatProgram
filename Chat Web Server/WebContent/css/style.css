@@ -7,13 +7,30 @@
 }
 
 #profilePicture {
-	position: fixed;
-	height: 25%;
-	width: 25%;
+	position: relative;
+	height: 50%;
+	width: 50%;
 }
 
 #messageTerminal {
 	height: 100px;
+	width: 80%;
+}
+
+#leftColumn {
+	width: 50%;
+	left: 0;
+}
+
+#userGreeting {
+	position: relative;
+	height: 10%;
+}
+
+#rightColumn {
+	position: absolute;
+	top: 10%; width : 50%;
+	right: 0;
 	width: 50%;
 }
 
@@ -26,26 +43,20 @@
 	width: 50%;
 }
 
-.onlineUserProfilePictures
-{
+.onlineUserProfilePictures {
 	height: 50px;
 	width: 50px;
 }
 
-tbody tr:hover
-{
-	background-color: #5fb9ff;
-}
-
-[data-receiver]
-{
-	background-color: #5fb9ff;
-}
-
 #inbox
 {
-	position: absolute;
-	width: 60%;
-	top: 10%;
-	left: 40%;
+	width: 100%;
+}
+
+tbody tr:hover {
+	background-color: #5fb9ff;
+}
+
+[data-receiver] {
+	background-color: #5fb9ff;
 }

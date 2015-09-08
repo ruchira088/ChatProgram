@@ -46,58 +46,62 @@
 				if (user != null)
 				{
 		%>
-		<h2>
+		<h2 id='userGreeting'>
 			Hi
 			<%=user.getName()%>,
 		</h2>
-		<p>
-			<a href="/Chat_Web_Server/logout">logout</a>
-		</p>
-		<p>
-			<img id="profilePicture" class="img-circle img-responsive"
-				src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
-							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>
-        ">
-		</p>
-		<div class="table-responsive">
-			<table class='table' id='onlineUserTable'>
-				<thead>
-					<tr>
-						<th>Online Users</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<%
-						Set<User> onlineUsers = chatServer.getOnlineUsers();
+		<div id="leftColumn">
 
-								for (User onlineUser : onlineUsers)
-								{
-					%>
-					<tr data-user-name='<%=onlineUser.getUsername()%>'>
-						<td><%=onlineUser.getName()%></td>
-						<td><img
-							class='onlineUserProfilePictures img-circle img-responsive'
-							src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
-					</tr>
-					<%
-						}
-					%>
-				</tbody>
-			</table>
-		</div>
-		<div>
-			<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
-			<button id="sendBtn" onclick="sendMessage()">Send</button>
-		</div>
-		<div>
-			<textarea id="messageHistory"></textarea>
-		</div>
-		<div>
+			<p>
+				<a href="/Chat_Web_Server/logout">logout</a>
+			</p>
+			<p>
+				<img id="profilePicture" class="img-circle img-responsive"
+					src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
+							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>">
+			</p>
+			<div class="table-responsive">
+				<table class='table' id='onlineUserTable'>
+					<thead>
+						<tr>
+							<th>Online Users</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+							Set<User> onlineUsers = chatServer.getOnlineUsers();
+
+									for (User onlineUser : onlineUsers)
+									{
+						%>
+						<tr data-user-name='<%=onlineUser.getUsername()%>'>
+							<td><%=onlineUser.getName()%></td>
+							<td><img
+								class='onlineUserProfilePictures img-circle img-responsive'
+								src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
+						</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+			</div>
+			<div>
+				<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
+				<button id="sendBtn" onclick="sendMessage()">Send</button>
+			</div>
+			<div>
+				<textarea id="messageHistory"></textarea>
+			</div>
 			<div>
 				<input type="button" onclick="getMessages('<%=user.getName()%>')"
 					value="Get Messages">
 			</div>
+		</div>
+
+		<div id="rightColumn">
+
 			<table id='inbox'>
 				<thead>
 					<tr>
