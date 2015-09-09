@@ -2,6 +2,8 @@ package general;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Message<T> implements Serializable
@@ -124,8 +126,27 @@ public class Message<T> implements Serializable
 	@Override
 	public String toString()
 	{
-		return "{\"messageContents\" : \"" + m_messageContents + "\", \"time\" : \"" + m_sentTimeStamp
-				+ "\", \"sender\" : \"" + m_sender + "\", \"receiver\" : \"" + m_receiver + "\"}";
+		return "{\"messageContents\" : \"" + m_messageContents + "\", \"time\" : " + getJsonFromTimeStamp(m_sentTimeStamp)
+				+ ", \"sender\" : \"" + m_sender + "\", \"receiver\" : \"" + m_receiver + "\"}";
+	}
+	
+	private String getJsonFromTimeStamp(Timestamp p_timestamp)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(p_timestamp.getTime());
+		
+		int year = calendar.get(Calendar.YEAR);
+		String month = new SimpleDateFormat("MMM").format(p_timestamp);
+		int day = calendar.get(Calendar.DATE);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minutes = calendar.get(Calendar.MINUTE);
+		int seconds = calendar.get(Calendar.SECOND);
+		
+		String Json = "{ \"Year\" : \"" + year + "\", \"Month\" : \"" + month + 
+				"\", \"Day\" : \"" + day + "\", \"Hour\" : \"" + hour + "\", \"Minutes\" :\"" +
+				minutes + "\", \"Seconds\" : \"" + seconds + "\"}";
+		
+		return Json;
 	}
 
 	public Message(T p_messageContents, Date p_sentDate, String p_receiver)
