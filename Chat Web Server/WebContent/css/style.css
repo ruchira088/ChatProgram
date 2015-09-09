@@ -6,63 +6,62 @@
 	width: 200px;
 }
 
-#profilePicture {
-	position: relative;
-	height: 50%;
-	width: 50%;
-}
 
-#messageTerminal {
-	height: 100px;
-	width: 80%;
-}
 
-.leftColumn {
-	width: 50%;
-	left: 0;
-}
 
-.fullColumn
+/** Chatroom */
+
+.leftColumn
 {
-	margin-top:	2%;
-}
-
-#sendBtn {
-	margin-bottom: 5px
-}
-
-#userGreeting {
-	position: relative;
-	height: 10%;
-}
-
-.rightColumn {
-	position: absolute;
-	top: 10%;
-	width: 50%;
-	right: 0;
-	width: 50%;
-}
-
-#messageHistory {
 	width: 80%;
-	height: 10%;
 }
 
-#onlineUserTable {
-	width: 50%;
+.rightColumn
+{
+	width: 20%;
 }
 
-.onlineUserProfilePictures {
-	height: 50px;
-	width: 50px;
-}
-
-#inbox {
+#topArea
+{
 	width: 100%;
 }
 
-tbody tr:hover {
+#inbox .sender
+{
+	width: 20%;
+}
+
+#inbox .time
+{
+	width: 30%;
+}
+
+#inbox .message
+{
+	width: 50%;
+}
+
+#messageTerminal
+{
+	width: 100%;
+}
+
+#inbox
+{
+	width: 100%;
+}
+
+.onlineUserProfilePictures
+{
+	height: 4vh;
+}
+
+#profilePicture
+{
+	height: 10vh;
+}
+
+#onlineUserTable tbody tr:hover {
 	background-color: #5fb9ff;
 }
 

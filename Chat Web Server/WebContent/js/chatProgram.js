@@ -138,7 +138,7 @@ function insertIntoMessageTable(message) {
 	senderData.innerHTML = message.sender;
 
 	var timeData = document.createElement("td");
-	timeData.innerHTML = message.time;
+	timeData.innerHTML = getStringFromTime(message.time);
 
 	var messageData = document.createElement("td");
 	messageData.innerHTML = message.messageContents;
@@ -151,8 +151,13 @@ function insertIntoMessageTable(message) {
 	var tableBody = document.querySelector("#inbox tbody");
 
 	tableBody.appendChild(tableRow);
-
 }
+
+function getStringFromTime(timeValue)
+{
+	return timeValue.Day + "/" + timeValue.Month + "/" + timeValue.Year;
+}
+
 
 function userForm(username) {
 	var name = document.getElementById("NAME");

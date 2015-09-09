@@ -50,84 +50,86 @@
 			Hi
 			<%=user.getName()%>,
 		</h2>
-		<div class="leftColumn">
-
-			<p>
-				<a href="/Chat_Web_Server/logout">logout</a>
-			</p>
-			<p>
-				<img id="profilePicture" class="img-circle img-responsive"
-					src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
+		<div class="content">
+			<table id="topArea">
+				<tr>
+					<td class="leftColumn">
+						<p>
+							<a href="/Chat_Web_Server/logout">logout</a>
+						</p>
+						<p>
+							<img id="profilePicture" class="img-circle img-responsive"
+								src="<%=Constants.PROJECT_NAME + Constants.RESOURCE_SERVER
 							+ user.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>">
-			</p>
+						</p>
 
-			<div>
-				<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
-				<br/>
-				<button id="sendBtn" onclick="sendMessage()">Send</button>
-			</div>
-			<div>
-				<textarea id="messageHistory"></textarea>
-			</div>
-			<div>
-				<input type="button" onclick="getMessages('<%=user.getName()%>')"
-					value="Get Messages">
-			</div>
-		</div>
+						<div>
+							<textarea id="messageTerminal" placeholder="Enter a message"></textarea>
+							<br />
+							<button id="sendBtn" onclick="sendMessage()">Send</button>
+						</div>
+						<div>
+							<textarea id="messageHistory"></textarea>
+						</div>
+						<div>
+							<input type="button" onclick="getMessages('<%=user.getName()%>')"
+								value="Get Messages">
+						</div>
+					</td>
+					<td class="rightColumn">
+						<div class="table-responsive">
+							<table class='table' id='onlineUserTable'>
+								<thead>
+									<tr>
+										<th colspan="2">Online Users</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+											Set<User> onlineUsers = chatServer.getOnlineUsers();
 
-		<div class="rightColumn">
-
-			<div class="table-responsive">
-				<table class='table' id='onlineUserTable'>
+													for (User onlineUser : onlineUsers)
+													{
+										%>
+									<tr data-user-name='<%=onlineUser.getUsername()%>'>
+										<td><%=onlineUser.getName()%></td>
+										<td><img
+											class='onlineUserProfilePictures img-circle img-responsive'
+											src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
+									</tr>
+									<%
+											}
+										%>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fullColumn">
+				<table id='inbox'>
 					<thead>
 						<tr>
-							<th>Online Users</th>
-							<th></th>
+							<th class="sender">Sender</th>
+							<th class="time">Time</th>
+							<th class="message">Message</th>
 						</tr>
 					</thead>
 					<tbody>
-						<%
-							Set<User> onlineUsers = chatServer.getOnlineUsers();
 
-									for (User onlineUser : onlineUsers)
-									{
-						%>
-						<tr data-user-name='<%=onlineUser.getUsername()%>'>
-							<td><%=onlineUser.getName()%></td>
-							<td><img
-								class='onlineUserProfilePictures img-circle img-responsive'
-								src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
-						</tr>
-						<%
-							}
-						%>
 					</tbody>
 				</table>
+
 			</div>
+			<%
+				}
+				}
+				else
+				{
+					response.sendRedirect(Constants.PROJECT_NAME + Constants.LOGIN_FORM);
+				}
+			%>
 		</div>
-		<div class="fullColumn">
-			<table id='inbox'>
-				<thead>
-					<tr>
-						<th>Sender</th>
-						<th>Time</th>
-						<th>Message</th>
-					</tr>
-				</thead>
-				<tbody>
-
-				</tbody>
-			</table>
-
-		</div>
-		<%
-			}
-			}
-			else
-			{
-				response.sendRedirect(Constants.PROJECT_NAME + Constants.LOGIN_FORM);
-			}
-		%>
 	</div>
 </body>
 </html>
