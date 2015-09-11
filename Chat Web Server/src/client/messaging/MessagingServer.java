@@ -41,7 +41,7 @@ public class MessagingServer extends HttpServlet
 
 		if (username.equals(credentials.getUsername()))
 		{
-			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation());
+			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation(null));
 		}
 		else
 		{
@@ -94,13 +94,15 @@ public class MessagingServer extends HttpServlet
 
 	public class RetrieveMessagesOperation implements MessagingOperation
 	{
+		private Date m_date = null;
+		
 		@Override
 		public boolean performOperatrion(Credentials p_credentials, HttpServletResponse p_response) throws Exception
 		{
 			ChatServer chatServer = new ChatServer();
 
 			LinkedList<Message<String>> messages = chatServer.getMessages(p_credentials.getUsername(),
-					p_credentials.getToken());
+					p_credentials.getToken(), m_date);
 						
 			PrintWriter writer = p_response.getWriter();					
 			writer.println(messages);
@@ -110,7 +112,11 @@ public class MessagingServer extends HttpServlet
 
 			return messages != null;
 		}
-
+		
+		public RetrieveMessagesOperation(Date p_date)
+		{
+			m_date = p_date;
+		}
 	}
 
 }

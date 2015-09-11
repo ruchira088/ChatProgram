@@ -1,6 +1,7 @@
 package server;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -224,13 +225,13 @@ public class ChatServer
 	 * @return {@link LinkedList} of {@link Message} sent to the user
 	 * @throws Exception
 	 */
-	public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken) throws Exception
+	public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken, Date p_date) throws Exception
 	{
 		LinkedList<Message<String>> messages = null;
 
 		if (isAuthenticatedUser(p_username, p_sessionToken))
 		{
-			messages = getDatabase().getMessages(p_username, null);
+			messages = getDatabase().getMessages(p_username, p_date);
 		}
 
 		return messages;

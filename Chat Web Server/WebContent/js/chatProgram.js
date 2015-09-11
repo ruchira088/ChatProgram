@@ -155,7 +155,7 @@ function insertIntoMessageTable(message) {
 
 function getStringFromTime(timeValue)
 {
-	return timeValue.Day + "/" + timeValue.Month + "/" + timeValue.Year;
+	return timeValue.Day + " " + timeValue.Month + " " + timeValue.Year + " - " + timeValue.Hour +  ":" + timeValue.Minutes + ":" + timeValue.Seconds;
 }
 
 
