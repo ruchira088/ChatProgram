@@ -50,6 +50,7 @@
 			Hi
 			<%=user.getName()%>,
 		</h2>
+		<span id="username" data-username="<%=user.getName()%>"></span>
 		<div class="content">
 			<table id="topArea">
 				<tr>
@@ -72,7 +73,8 @@
 							<textarea id="messageHistory"></textarea>
 						</div>
 						<div>
-							<input type="button" onclick="getMessages('<%=user.getName()%>')"
+							<input type="button"
+								onclick="getMessages('<%=user.getName()%>', getSelectedOnlineUser())"
 								value="Get Messages">
 						</div>
 					</td>
@@ -86,11 +88,11 @@
 								</thead>
 								<tbody>
 									<%
-											Set<User> onlineUsers = chatServer.getOnlineUsers();
+										Set<User> onlineUsers = chatServer.getOnlineUsers();
 
-													for (User onlineUser : onlineUsers)
-													{
-										%>
+												for (User onlineUser : onlineUsers)
+												{
+									%>
 									<tr data-user-name='<%=onlineUser.getUsername()%>'>
 										<td><%=onlineUser.getName()%></td>
 										<td><img
@@ -98,8 +100,8 @@
 											src='resource/<%=onlineUser.getAttribute(UserAttributes.PROFILE_PICTURE_PATH)%>'></td>
 									</tr>
 									<%
-											}
-										%>
+										}
+									%>
 								</tbody>
 							</table>
 						</div>

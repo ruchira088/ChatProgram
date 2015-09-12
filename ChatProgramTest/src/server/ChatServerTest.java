@@ -69,7 +69,7 @@ public class ChatServerTest
       message.setSender(USERNAME_2);
       getChatServer().sendMessage(USERNAME_2, token_2, message);
       
-      List<Message<String>> messages = getChatServer().getMessages(USERNAME_1, token_1, null);
+      List<Message<String>> messages = getChatServer().getMessages(USERNAME_1, token_1, null, null);
       
       System.out.println("getMessages() : " + messages);
       System.out.println("getSentMessages() : " + getChatServer().getSentMessages(USERNAME_2, token_2));

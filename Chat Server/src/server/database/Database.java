@@ -14,13 +14,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import exceptions.UnableToConnectToDatabaseException;
 import general.Message;
 import server.User;
 import server.User.UserAttributes;
+import server.database.Database.SearchableAttribute;
+import server.database.DatabaseQuery.Condition;
+import server.database.DatabaseQuery.QueryAnalyzer;
+import server.database.DatabaseQuery.Table;
+import server.database.DatabaseQuery.Type;
 
 /**
  * 
@@ -48,21 +55,76 @@ public class Database
 	{
 		DatabaseManager.initializeTables();
 	}
+	
+	public interface SearchableAttribute
+	{
+		public String getAttribute();
+		
+		public boolean isStringValue();
+	}
 
 	/**
 	 * Columns of the "USER_TABLE" which holds data about the users.
 	 */
-	public enum UserTableColumns
+	public enum UserTableColumns implements SearchableAttribute
 	{
 		USERNAME, PASSWORD, ATTRIBUTES;
+		
+		private boolean m_isStringValue;
+
+		private UserTableColumns()
+		{
+			this(true);
+		}
+		
+		private UserTableColumns(boolean p_isStringValue)
+		{
+			m_isStringValue = p_isStringValue;
+		}
+		
+		@Override
+		public String getAttribute()
+		{
+			return this.name();
+		}
+
+		@Override
+		public boolean isStringValue()
+		{
+			return m_isStringValue;
+		}		
 	}
 
 	/**
 	 * Columns of the "MESSAGES_TABLE" which holds data about the messages.
 	 */
-	public enum MessageTableColumns
+	public enum MessageTableColumns implements SearchableAttribute
 	{
-		TIMESTAMP, SENDER, RECEIVER, MESSAGE;
+		TIMESTAMP(false), SENDER, RECEIVER, MESSAGE;
+		
+		private boolean m_isStringValue;
+		
+		private MessageTableColumns()
+		{
+			this(true);
+		}
+		
+		private MessageTableColumns(boolean p_isStringValue)
+		{
+			m_isStringValue = p_isStringValue;
+		}
+		
+		@Override
+		public String getAttribute()
+		{
+			return this.name();
+		}
+
+		@Override
+		public boolean isStringValue()
+		{
+			return m_isStringValue;
+		}	
 	}
 
 	/**
@@ -266,22 +328,42 @@ public class Database
 
 	}
 
-	public LinkedList<Message<String>> getMessages(String p_receiver, Date p_date) throws Exception
+	public LinkedList<Message<String>> getIncomingMessages(String p_receiver, String p_sender, Date p_date) throws Exception
 	{
-		PreparedStatement prepareStatement;
+		DatabaseQuery databaseQuery = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_receiver).And()
+				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_sender).getQuery();
 
-		if (p_date != null)
+		HashMap<SearchableAttribute,Object> map = new HashMap<SearchableAttribute, Object>();
+		
+		if(p_date != null)
 		{
-			prepareStatement = getConnection()
-					.prepareStatement("SELECT * FROM MESSAGES_TABLE WHERE RECEIVER = ? AND TIMESTAMP > ?");
-			prepareStatement.setTimestamp(2, new Timestamp(p_date.getTime()));
+			map.put(MessageTableColumns.TIMESTAMP, new Timestamp(p_date.getTime()));			
 		}
-		else
+				
+		return getMessages(databaseQuery, map);
+	}
+	
+	public LinkedList<Message<String>> getMessages(DatabaseQuery p_databaseQuery, Map<SearchableAttribute, Object> p_nonStringValues) throws Exception
+	{
+		PreparedStatement prepareStatement = getConnection().prepareStatement(p_databaseQuery.toString());
+				
+		for (SearchableAttribute searchableAttribute : p_nonStringValues.keySet())
 		{
-			prepareStatement = getConnection().prepareStatement("SELECT * FROM MESSAGES_TABLE WHERE RECEIVER = ?");
+			QueryAnalyzer queryAnalyzer = p_databaseQuery.analyze();
+
+			if(queryAnalyzer.hasSelector(searchableAttribute))
+			{
+				int position = queryAnalyzer.getPosition(searchableAttribute);
+				
+				if(searchableAttribute.equals(MessageTableColumns.TIMESTAMP))
+				{
+					prepareStatement.setTimestamp(position, (Timestamp) p_nonStringValues.get(searchableAttribute)); 
+				}
+			}
 		}
 
-		prepareStatement.setString(1, p_receiver);
 		ResultSet resultSet = prepareStatement.executeQuery();
 
 		return convertResultSetToMessageList(resultSet);

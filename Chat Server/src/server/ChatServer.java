@@ -225,13 +225,13 @@ public class ChatServer
 	 * @return {@link LinkedList} of {@link Message} sent to the user
 	 * @throws Exception
 	 */
-	public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken, Date p_date) throws Exception
+	public LinkedList<Message<String>> getMessages(String p_username, String p_sessionToken, String p_sender, Date p_date) throws Exception
 	{
 		LinkedList<Message<String>> messages = null;
 
 		if (isAuthenticatedUser(p_username, p_sessionToken))
 		{
-			messages = getDatabase().getMessages(p_username, p_date);
+			messages = getDatabase().getIncomingMessages(p_username, p_sender, p_date);
 		}
 
 		return messages;

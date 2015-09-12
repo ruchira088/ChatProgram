@@ -1,57 +1,77 @@
 /**
- *
+ * 
  */
 
 var g_uploadFile;
 
-var g_displayedMessages;
-
-var g_receiver;
-
-function initialize() {
+function initialize()
+{
 	addListenersToUserTable(document.getElementById("onlineUserTable"));
 }
 
-function setReceiver(userRow, data) {
-	for (var i = 0; i < data.length; i++) {
-		data[i].removeAttribute("data-receiver");
+function setReceiver(userRow, data)
+{
+	for (var i = 0; i < data.length; i++)
+	{
+		data[i].removeAttribute("data-selectedUser");
 	}
 
-	userRow.setAttribute("data-receiver", "true");
+	userRow.setAttribute("data-selectedUser", "true");
 }
 
-function addListenersToUserTable(table) {
-
+function addListenersToUserTable(table)
+{
 	var data = table.querySelectorAll("tbody tr[data-user-name]");
 
-	for (var i = 0; i < data.length; i++) {
-		function addListener() {
+	for (var i = 0; i < data.length; i++)
+	{
+		function addListener()
+		{
 			var userRow = data[i];
 			var name = userRow.getAttribute("data-user-name");
 
-			userRow.addEventListener("click", function() {
+			userRow.addEventListener("click", function()
+			{
 				setReceiver(userRow, data);
-				g_receiver = name;
+				clearMessageTable();
+				getMessages(getUsername(), name);
 				console.log(name);
 			});
 		}
 
 		addListener();
-
 	}
 }
 
-function drop(event, element) {
+function getSelectedOnlineUser()
+{
+	var username = null;
+
+	var selectedUser = document
+			.querySelector("#onlineUserTable [data-selectedUser]");
+
+	if (selectedUser)
+	{
+		username = selectedUser.getAttribute("data-user-name");
+	}
+
+	return username;
+}
+
+function drop(event, element)
+{
 	var file = event.dataTransfer.files[0];
 	setPreviewImageAndSetAsUploadFile(event.dataTransfer.files[0]);
 	event.preventDefault();
 }
 
-function setUploadingFile(file) {
+function setUploadingFile(file)
+{
 	g_uploadFile = file;
 }
 
-function newUser() {
+function newUser()
+{
 	var username = document.getElementById("username");
 
 	var formData = new FormData();
@@ -59,11 +79,15 @@ function newUser() {
 
 	var request = new XMLHttpRequest();
 	request.open("POST", "/Chat_Web_Server/usernameChecker");
-	request.onreadystatechange = function() {
-		if (request.readyState == 4) {
-			if (request.status == 200) {
+	request.onreadystatechange = function()
+	{
+		if (request.readyState == 4)
+		{
+			if (request.status == 200)
+			{
 				userForm(username);
-			} else {
+			} else
+			{
 				var usernameAlreadyTaken = document
 						.getElementById("usernameAlreadyTaken");
 				usernameAlreadyTaken.removeAttribute("style");
@@ -73,19 +97,25 @@ function newUser() {
 	request.send(formData);
 }
 
-function sendMessage() {
+function sendMessage()
+{
 	var messageBox = document.getElementById("messageTerminal");
 	var message = messageBox.value;
 
 	var formData = new FormData();
 	formData.append("message", message);
 
-	if (g_receiver) {
-		formData.append("recipient", g_receiver);
+	var getSelectedUser = getSelectedOnlineUser();
+
+	if (getSelectedUser)
+	{
+		formData.append("recipient", getSelectedUser);
 
 		var messageRequest = new XMLHttpRequest();
-		messageRequest.onreadystatechange = function() {
-			if (messageRequest.readyState == 4 && messageRequest.status == 200) {
+		messageRequest.onreadystatechange = function()
+		{
+			if (messageRequest.readyState == 4 && messageRequest.status == 200)
+			{
 				var messageHistory = document.getElementById("messageHistory");
 				messageHistory.innerHTML = message + "\n"
 						+ messageHistory.innerHTML;
@@ -94,53 +124,111 @@ function sendMessage() {
 		}
 		messageRequest.open("POST", "/Chat_Web_Server/messageServer");
 		messageRequest.send(formData);
-	} else {
+	} else
+	{
 		alert("Please select a recipient.");
 	}
 
 }
 
-function getMessages(username) {
+function getMessages(username, selectedOnlineUser, date)
+{
 	var request = new XMLHttpRequest();
 
-	request.onreadystatechange = function() {
-		if (request.readyState == 4 && request.status == 200) {
+	request.onreadystatechange = function()
+	{
+		if (request.readyState == 4 && request.status == 200)
+		{
 			displayMessages(request.responseText);
 		}
 	}
 
-	request.open("GET", "/Chat_Web_Server/messageServer?username=" + username);
+	request.open("GET", "/Chat_Web_Server/messageServer?username=" + username
+			+ (selectedOnlineUser ? "&sender=" + selectedOnlineUser : "")
+			+ (date ? "&date=" + date : ""));
 	request.send();
 
 	console.log("Fetching Messages.");
 }
 
-function displayMessages(response) {
+function getUsername()
+{
+	var username = document.getElementById("username").getAttribute(
+			"data-username");
+
+	return username;
+}
+
+function displayMessages(response)
+{
 	var messages = JSON.parse(response);
 
-	if (g_displayedMessages) {
+	var displayedMessagesLength = getDisplayedMessages().length;
+
+	if (displayedMessagesLength != 0)
+	{
 		var temp = messages;
-		messages = messages.splice(g_displayedMessages.length, messages.length);
-		g_displayedMessages = temp.concat(messages);
-	} else {
-		g_displayedMessages = messages;
+		messages = messages.splice(displayedMessagesLength, messages.length);
 	}
 
-	for (var i = 0; i < messages.length; i++) {
+	for (var i = 0; i < messages.length; i++)
+	{
 		insertIntoMessageTable(messages[i]);
 	}
 
 	console.log(messages);
 }
 
-function insertIntoMessageTable(message) {
+function getDisplayedMessages()
+{
+	var messageElements = document.querySelectorAll("#inbox tbody tr");
+
+	var messages = [];
+
+	for (var i = 0; i < messageElements.length; i++)
+	{
+		messages[i] = new Message(messageElements[i]);
+	}
+
+	return messages;
+}
+
+function Message(messageElement)
+{
+	this.getValue = function(className)
+	{
+		return messageElement.querySelector("." + className).innerHTML;
+	}
+
+	this.sender = this.getValue("sender");
+	this.time = this.getValue("time");
+	this.message = this.getValue("message");
+
+}
+
+function clearMessageTable()
+{
+	g_displayedMessages = "";
+
+	var messagestable = document.getElementById("inbox");
+	var tableBody = document.createElement("tbody");
+
+	messagestable.replaceChild(tableBody, messagestable
+			.getElementsByTagName("tbody")[0]);
+}
+
+function insertIntoMessageTable(message)
+{
 	var senderData = document.createElement("td");
+	senderData.setAttribute("class", "sender");
 	senderData.innerHTML = message.sender;
 
 	var timeData = document.createElement("td");
+	timeData.setAttribute("class", "time");
 	timeData.innerHTML = getStringFromTime(message.time);
 
 	var messageData = document.createElement("td");
+	messageData.setAttribute("class", "message");
 	messageData.innerHTML = message.messageContents;
 
 	var tableRow = document.createElement("tr");
@@ -155,11 +243,13 @@ function insertIntoMessageTable(message) {
 
 function getStringFromTime(timeValue)
 {
-	return timeValue.Day + " " + timeValue.Month + " " + timeValue.Year + " - " + timeValue.Hour +  ":" + timeValue.Minutes + ":" + timeValue.Seconds;
+	return timeValue.Day + " " + timeValue.Month + " " + timeValue.Year + " - "
+			+ timeValue.Hour + ":" + timeValue.Minutes + ":"
+			+ timeValue.Seconds;
 }
 
-
-function userForm(username) {
+function userForm(username)
+{
 	var name = document.getElementById("NAME");
 	var password = document.getElementById("password");
 	var userForm = new FormData();
@@ -168,14 +258,17 @@ function userForm(username) {
 	userForm.append(username.id, username.value);
 	userForm.append(password.id, password.value);
 
-	if (g_uploadFile != null) {
+	if (g_uploadFile != null)
+	{
 		userForm.append("PROFILE_PICTURE", g_uploadFile, g_uploadFile.name);
 	}
 
 	var request = new XMLHttpRequest();
-	request.onreadystatechange = function() {
-		if (request.readyState == 4 && request.status == 200) {
-			//document.getElementById("userForm").submit();
+	request.onreadystatechange = function()
+	{
+		if (request.readyState == 4 && request.status == 200)
+		{
+			// document.getElementById("userForm").submit();
 			window.location.replace("/Chat_Web_Server");
 		}
 	}
@@ -184,10 +277,12 @@ function userForm(username) {
 
 }
 
-function setPreviewImageAndSetAsUploadFile(file) {
+function setPreviewImageAndSetAsUploadFile(file)
+{
 	var reader = new FileReader();
 	setUploadingFile(file)
-	reader.onload = function(event) {
+	reader.onload = function(event)
+	{
 		var previewImage = document.getElementById("previewImage");
 		previewImage.src = reader.result;
 	}
@@ -195,12 +290,14 @@ function setPreviewImageAndSetAsUploadFile(file) {
 	reader.readAsDataURL(file);
 }
 
-function dragOver(event) {
+function dragOver(event)
+{
 	event.preventDefault();
 	event.dataTransfer.dropEffect = 'copy';
 }
 
-function validateForm() {
+function validateForm()
+{
 	var submitForm = true;
 	var enteredUsername = document.getElementById("username").value;
 	var enteredPassword = document.getElementById("password").value;
@@ -210,24 +307,31 @@ function validateForm() {
 	var invalidCredentials = document.getElementById("invalidCredentials");
 	hideElements(noUsername, noPassword, invalidCredentials);
 
-	if (enteredUsername == "") {
+	if (enteredUsername == "")
+	{
 		noUsername.removeAttribute("style");
 		submitForm = false;
 	}
 
-	if (enteredPassword == "") {
+	if (enteredPassword == "")
+	{
 		noPassword.removeAttribute("style");
 		submitForm = false;
 	}
 
-	if (submitForm) {
+	if (submitForm)
+	{
 		var xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.onreadystatechange = function() {
-			if (xmlHttpRequest.readyState == 4) {
-				if (xmlHttpRequest.status == 200) {
+		xmlHttpRequest.onreadystatechange = function()
+		{
+			if (xmlHttpRequest.readyState == 4)
+			{
+				if (xmlHttpRequest.status == 200)
+				{
 					document.getElementById("loginForm").submit();
 				}
-				if (xmlHttpRequest.status == 401) {
+				if (xmlHttpRequest.status == 401)
+				{
 					invalidCredentials.removeAttribute("style");
 				}
 			}
@@ -241,9 +345,12 @@ function validateForm() {
 	}
 }
 
-function hideElements() {
-	for (var i = 0; i < arguments.length; i++) {
-		if (arguments[i] != null) {
+function hideElements()
+{
+	for (var i = 0; i < arguments.length; i++)
+	{
+		if (arguments[i] != null)
+		{
 			arguments[i].setAttribute("style", "display: none");
 		}
 	}

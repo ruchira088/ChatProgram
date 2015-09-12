@@ -37,11 +37,13 @@ public class MessagingServer extends HttpServlet
 			throws ServletException, IOException
 	{
 		String username = p_request.getParameter("username");
+		String sender = p_request.getParameter("sender");		
+		
 		Credentials credentials = Helpers.getCredentialsFromCookies(p_request);
 
 		if (username.equals(credentials.getUsername()))
 		{
-			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation(null));
+			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation(sender, null));
 		}
 		else
 		{
@@ -96,13 +98,15 @@ public class MessagingServer extends HttpServlet
 	{
 		private Date m_date = null;
 		
+		private String m_sender = null;
+		
 		@Override
 		public boolean performOperatrion(Credentials p_credentials, HttpServletResponse p_response) throws Exception
 		{
 			ChatServer chatServer = new ChatServer();
 
 			LinkedList<Message<String>> messages = chatServer.getMessages(p_credentials.getUsername(),
-					p_credentials.getToken(), m_date);
+					p_credentials.getToken(), m_sender, m_date);
 						
 			PrintWriter writer = p_response.getWriter();					
 			writer.println(messages);
@@ -113,9 +117,10 @@ public class MessagingServer extends HttpServlet
 			return messages != null;
 		}
 		
-		public RetrieveMessagesOperation(Date p_date)
+		public RetrieveMessagesOperation(String p_sender, Date p_date)
 		{
 			m_date = p_date;
+			m_sender = p_sender;
 		}
 	}
 
