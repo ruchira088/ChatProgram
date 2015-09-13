@@ -74,7 +74,7 @@
 						</div>
 						<div>
 							<input type="button"
-								onclick="getMessages('<%=user.getName()%>', getSelectedOnlineUser())"
+								onclick="clearMessageTable(); getMessages('<%=user.getName()%>', getSelectedOnlineUser())"
 								value="Get Messages">
 						</div>
 					</td>

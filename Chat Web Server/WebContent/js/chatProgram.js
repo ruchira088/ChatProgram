@@ -128,10 +128,19 @@ function sendMessage()
 	{
 		alert("Please select a recipient.");
 	}
-
 }
 
-function getMessages(username, selectedOnlineUser, date)
+function refreshMessages()
+{
+	var username = getUsername();
+	var selectedOnlineUser = getSelectedOnlineUser();
+	console.log("Starting refresh - current time " + new Date());
+	console.log("refreshMessages: " + username + ", " + selectedOnlineUser);
+	
+	getMessages(username, selectedOnlineUser, true);	
+}
+
+function getMessages(username, selectedOnlineUser, refresh)
 {
 	var request = new XMLHttpRequest();
 
@@ -145,7 +154,7 @@ function getMessages(username, selectedOnlineUser, date)
 
 	request.open("GET", "/Chat_Web_Server/messageServer?username=" + username
 			+ (selectedOnlineUser ? "&sender=" + selectedOnlineUser : "")
-			+ (date ? "&date=" + date : ""));
+			+ (refresh ? "&refresh=" + refresh : ""));
 	request.send();
 
 	console.log("Fetching Messages.");
@@ -163,20 +172,23 @@ function displayMessages(response)
 {
 	var messages = JSON.parse(response);
 
-	var displayedMessagesLength = getDisplayedMessages().length;
-
-	if (displayedMessagesLength != 0)
-	{
-		var temp = messages;
-		messages = messages.splice(displayedMessagesLength, messages.length);
-	}
+//	var displayedMessagesLength = getDisplayedMessages().length;
+//
+//	if (displayedMessagesLength != 0)
+//	{
+//		var temp = messages;
+//		messages = messages.splice(displayedMessagesLength, messages.length);
+//	}
 
 	for (var i = 0; i < messages.length; i++)
 	{
 		insertIntoMessageTable(messages[i]);
 	}
-
+	
 	console.log(messages);
+	console.log("scheduling refresh in 1 second - current time " + new Date());
+	refreshMessages();
+	//window.setTimeout(refreshMessages, 1000);
 }
 
 function getDisplayedMessages()
@@ -208,8 +220,6 @@ function Message(messageElement)
 
 function clearMessageTable()
 {
-	g_displayedMessages = "";
-
 	var messagestable = document.getElementById("inbox");
 	var tableBody = document.createElement("tbody");
 
@@ -239,7 +249,7 @@ function insertIntoMessageTable(message)
 	var tableBody = document.querySelector("#inbox tbody");
 
 	tableBody.appendChild(tableRow);
-}
+	}
 
 function getStringFromTime(timeValue)
 {

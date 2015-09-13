@@ -59,10 +59,10 @@ public class DatabaseQuery
 		return this;
 	}
 	
-	public QueryAnalyzer analyze()
-	{
-		return new QueryAnalyzer();
-	}
+//	public QueryAnalyzer analyze()
+//	{
+//		return new QueryAnalyzer();
+//	}
 
 	public QuerySelectors where()
 	{
@@ -89,46 +89,46 @@ public class DatabaseQuery
 		return stringBuilder.toString();
 	}
 
-	public class QueryAnalyzer
-	{
-		LinkedList<SearchableAttribute> m_searchableAttributes;
-		
-		public boolean hasSelector(SearchableAttribute p_searchableAttribute)
-		{						
-			return getPosition(p_searchableAttribute) != 0;
-		}
-		
-		public int getPosition(SearchableAttribute p_searchableAttribute)
-		{
-			if(m_searchableAttributes == null)
-			{
-				init();
-			}
-			
-			return m_searchableAttributes.indexOf(p_searchableAttribute) + 1;
-		}
-		
-		private void init()
-		{
-			LinkedList<QueryFragment> queryFragments = m_selectors.getQueryFragments();
-			
-			m_searchableAttributes = new LinkedList<Database.SearchableAttribute>();
-						
-			for (QueryFragment queryFragment : queryFragments)
-			{
-				if(queryFragment instanceof Selector)
-				{
-					Selector<?> selector = (Selector<?>) queryFragment;
-					
-					if(!selector.getAttribute().isStringValue())
-					{
-						m_searchableAttributes.add(selector.getAttribute());						
-					}
-				}				
-			}
-			
-		}
-	}
+//	public class QueryAnalyzer
+//	{
+//		LinkedList<SearchableAttribute> m_searchableAttributes;
+//		
+//		public boolean hasSelector(SearchableAttribute p_searchableAttribute)
+//		{						
+//			return getPosition(p_searchableAttribute) != 0;
+//		}
+//		
+//		public int getPosition(SearchableAttribute p_searchableAttribute)
+//		{
+//			if(m_searchableAttributes == null)
+//			{
+//				init();
+//			}
+//			
+//			return m_searchableAttributes.indexOf(p_searchableAttribute) + 1;
+//		}
+//		
+//		private void init()
+//		{
+//			LinkedList<QueryFragment> queryFragments = m_selectors.getQueryFragments();
+//			
+//			m_searchableAttributes = new LinkedList<Database.SearchableAttribute>();
+//						
+//			for (QueryFragment queryFragment : queryFragments)
+//			{
+//				if(queryFragment instanceof Selector)
+//				{
+//					Selector<?> selector = (Selector<?>) queryFragment;
+//					
+//					if(!selector.getAttribute().isStringValue())
+//					{
+//						m_searchableAttributes.add(selector.getAttribute());						
+//					}
+//				}				
+//			}
+//			
+//		}
+//	}
 	
 	public class QuerySelectors
 	{

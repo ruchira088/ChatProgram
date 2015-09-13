@@ -96,7 +96,7 @@ public class DatabaseManager
       @Override
       public String getCreationStatement()
       {
-         String statement = "CREATE TABLE `chat`.`MESSAGES_TABLE` ( `COUNT` INT NOT NULL AUTO_INCREMENT , `TIMESTAMP` TIMESTAMP NOT NULL ,"
+         String statement = "CREATE TABLE `chat`.`MESSAGES_TABLE` ( `COUNT` INT NOT NULL AUTO_INCREMENT , `TIMESTAMP` TIMESTAMP(3) NOT NULL ,"
             + " `SENDER` VARCHAR(200) NOT NULL , `RECEIVER` VARCHAR(200) NOT NULL , `MESSAGE` TEXT NOT NULL , PRIMARY KEY (`COUNT`) ) ENGINE = InnoDB;";
 
          return statement;

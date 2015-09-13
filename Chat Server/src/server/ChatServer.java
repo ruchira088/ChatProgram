@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import exceptions.UnableToConnectToDatabaseException;
 import exceptions.UnauthorisedOperationException;
@@ -22,6 +24,8 @@ import server.database.Database;
 public class ChatServer
 {
 	public static Map<String, SessionToken> s_tokenMap = new HashMap<String, SessionToken>();
+	
+	private static Map<String, CountDownLatch> s_lockMap = new HashMap<String, CountDownLatch>();
 
 	private Database m_database = new Database();
 
@@ -119,6 +123,8 @@ public class ChatServer
 			getTokenMap().putIfAbsent(p_username, sessionToken);
 
 			token = getTokenMap().get(p_username).getId();
+			
+			s_lockMap.putIfAbsent(p_username, new CountDownLatch(1));
 		}
 
 		return token;
@@ -146,6 +152,8 @@ public class ChatServer
 		if (isAuthenticatedUser(p_senderUsername, p_sessionToken))
 		{
 			success = getDatabase().sendMessage(p_message);
+			CountDownLatch countDownLatch = s_lockMap.get(p_message.getReceiver());
+			countDownLatch.countDown();
 		}
 
 		return success;
@@ -231,7 +239,20 @@ public class ChatServer
 
 		if (isAuthenticatedUser(p_username, p_sessionToken))
 		{
-			messages = getDatabase().getIncomingMessages(p_username, p_sender, p_date);
+			messages = getDatabase().getIncomingAndOutgoingMessages(p_username, p_sender, p_date);
+		}
+		
+		if(p_date != null && messages.isEmpty())
+		{
+			CountDownLatch countDownLatch = s_lockMap.get(p_username);
+			
+			boolean gotMessage = countDownLatch.await(10, TimeUnit.SECONDS);
+			
+			if(gotMessage)
+			{
+				s_lockMap.put(p_username, new CountDownLatch(1));
+				messages = getMessages(p_username, p_sessionToken, p_sender, p_date);				
+			}
 		}
 
 		return messages;

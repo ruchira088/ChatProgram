@@ -37,13 +37,16 @@ public class MessagingServer extends HttpServlet
 			throws ServletException, IOException
 	{
 		String username = p_request.getParameter("username");
-		String sender = p_request.getParameter("sender");		
+		String sender = p_request.getParameter("sender");
+		boolean update = p_request.getParameter("refresh") == null ? false : Boolean.valueOf(p_request.getParameter("refresh"));
+
+		Date date = update ? new Date() : null;		
 		
 		Credentials credentials = Helpers.getCredentialsFromCookies(p_request);
 
 		if (username.equals(credentials.getUsername()))
 		{
-			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation(sender, null));
+			performMessageOperation(p_request, p_response, new RetrieveMessagesOperation(sender, date));
 		}
 		else
 		{

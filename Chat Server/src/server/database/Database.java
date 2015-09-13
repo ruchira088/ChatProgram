@@ -14,18 +14,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 import exceptions.UnableToConnectToDatabaseException;
 import general.Message;
 import server.User;
 import server.User.UserAttributes;
-import server.database.Database.SearchableAttribute;
 import server.database.DatabaseQuery.Condition;
-import server.database.DatabaseQuery.QueryAnalyzer;
 import server.database.DatabaseQuery.Table;
 import server.database.DatabaseQuery.Type;
 
@@ -50,7 +46,7 @@ public class Database
 
 	/**
 	 * If the database tables don't exist, create the tables.
-	 */
+	 */ 
 	static
 	{
 		DatabaseManager.initializeTables();
@@ -327,6 +323,35 @@ public class Database
 		return isSuccess;
 
 	}
+	
+	public LinkedList<Message<String>> getIncomingAndOutgoingMessages(String p_receiver, String p_sender, Date p_date) throws Exception
+	{
+		DatabaseQuery databaseQuery_1 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_receiver).And()
+				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_sender).getQuery();
+		
+		DatabaseQuery databaseQuery_2 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_sender).And()
+				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_receiver).getQuery();
+		
+		String query = databaseQuery_1 + " UNION " + databaseQuery_2 + " ORDER BY " + MessageTableColumns.TIMESTAMP.name();
+		
+		PreparedStatement prepareStatement = getConnection().prepareStatement(query);
+		
+		if(p_date != null)
+		{
+			Timestamp timestamp = new Timestamp(p_date.getTime());
+			prepareStatement.setTimestamp(1, timestamp);
+			prepareStatement.setTimestamp(2, timestamp); 
+		}
+		
+		ResultSet resultSet = prepareStatement.executeQuery();
+
+		return convertResultSetToMessageList(resultSet);		
+		
+	}
 
 	public LinkedList<Message<String>> getIncomingMessages(String p_receiver, String p_sender, Date p_date) throws Exception
 	{
@@ -335,39 +360,41 @@ public class Database
 				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
 				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_sender).getQuery();
 
-		HashMap<SearchableAttribute,Object> map = new HashMap<SearchableAttribute, Object>();
+		PreparedStatement prepareStatement = getConnection().prepareStatement(databaseQuery.toString());
 		
 		if(p_date != null)
 		{
-			map.put(MessageTableColumns.TIMESTAMP, new Timestamp(p_date.getTime()));			
+			prepareStatement.setTimestamp(1, new Timestamp(p_date.getTime()));
 		}
-				
-		return getMessages(databaseQuery, map);
-	}
-	
-	public LinkedList<Message<String>> getMessages(DatabaseQuery p_databaseQuery, Map<SearchableAttribute, Object> p_nonStringValues) throws Exception
-	{
-		PreparedStatement prepareStatement = getConnection().prepareStatement(p_databaseQuery.toString());
-				
-		for (SearchableAttribute searchableAttribute : p_nonStringValues.keySet())
-		{
-			QueryAnalyzer queryAnalyzer = p_databaseQuery.analyze();
-
-			if(queryAnalyzer.hasSelector(searchableAttribute))
-			{
-				int position = queryAnalyzer.getPosition(searchableAttribute);
-				
-				if(searchableAttribute.equals(MessageTableColumns.TIMESTAMP))
-				{
-					prepareStatement.setTimestamp(position, (Timestamp) p_nonStringValues.get(searchableAttribute)); 
-				}
-			}
-		}
-
+		
 		ResultSet resultSet = prepareStatement.executeQuery();
 
-		return convertResultSetToMessageList(resultSet);
+		return convertResultSetToMessageList(resultSet);		
 	}
+	
+//	public LinkedList<Message<String>> getMessages(DatabaseQuery p_databaseQuery, Map<SearchableAttribute, Object> p_nonStringValues) throws Exception
+//	{
+//		PreparedStatement prepareStatement = getConnection().prepareStatement(p_databaseQuery.toString());
+//				
+//		for (SearchableAttribute searchableAttribute : p_nonStringValues.keySet())
+//		{
+//			QueryAnalyzer queryAnalyzer = p_databaseQuery.analyze();
+//
+//			if(queryAnalyzer.hasSelector(searchableAttribute))
+//			{
+//				int position = queryAnalyzer.getPosition(searchableAttribute);
+//				
+//				if(searchableAttribute.equals(MessageTableColumns.TIMESTAMP))
+//				{
+//					prepareStatement.setTimestamp(position, (Timestamp) p_nonStringValues.get(searchableAttribute)); 
+//				}
+//			}
+//		}
+//
+//		ResultSet resultSet = prepareStatement.executeQuery();
+//
+//		return convertResultSetToMessageList(resultSet);
+//	}
 
 	public LinkedList<Message<String>> getSentMessages(String p_sender, Timestamp p_timestamp) throws Exception
 	{

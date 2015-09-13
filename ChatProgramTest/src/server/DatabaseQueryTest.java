@@ -21,6 +21,22 @@ public class DatabaseQueryTest
 				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, new Date()).And().setSelector(MessageTableColumns.SENDER, Condition.EQUALS, "IBM").getQuery();
 		
 		System.out.println(databaseQuery);
+		
+		DatabaseQuery databaseQuery_1 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, "CAT").And()
+				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, null).And()
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, "IBM").getQuery();
+		
+		DatabaseQuery databaseQuery_2 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, "IBM").And()
+				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, null).And()
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, "CAT").getQuery();
+		
+		String query = databaseQuery_1 + " UNION " + databaseQuery_2;
+		System.out.println(query);
+		
+		
+		
 	}
 
 }
