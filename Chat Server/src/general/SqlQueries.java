@@ -2,7 +2,6 @@ package general;
 
 public class SqlQueries
 {
-   
    private static final String USER_TABLE = "userTable";
    
    private static final String MESSAGE_TABLE = "messages";

@@ -91,7 +91,7 @@ public class Message<T> implements Serializable
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Message other = (Message) obj;
+		Message<?> other = (Message<?>) obj;
 		if (m_messageContents == null)
 		{
 			if (other.m_messageContents != null)

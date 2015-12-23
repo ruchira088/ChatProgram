@@ -25,9 +25,6 @@ import server.database.DatabaseQuery.Condition;
 import server.database.DatabaseQuery.Table;
 import server.database.DatabaseQuery.Type;
 
-/**
- * 
- */
 public class Database
 {
 	/** Database driver class */

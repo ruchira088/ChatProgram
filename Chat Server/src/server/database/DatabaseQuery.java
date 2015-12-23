@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import server.database.Database.SearchableAttribute;
-import server.database.DatabaseQuery.QueryFragment;
-import server.database.DatabaseQuery.QuerySelectors.Selector;
 
 public class DatabaseQuery
 {

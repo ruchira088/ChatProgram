@@ -108,7 +108,6 @@ public class DatabaseManager
       @Override
       public String getName()
       {
-         // TODO Auto-generated method stub
          return "MESSAGES_TABLE";
       }
    }
@@ -134,7 +133,6 @@ public class DatabaseManager
       @Override
       public String getName()
       {
-         // TODO Auto-generated method stub
          return "IMAGES_TABLE";
       }
 
