@@ -3,18 +3,29 @@ package general;
 import java.io.Serializable;
 import java.util.UUID;
 
+/** This class represents a session token */
 public class SessionToken implements Serializable
 {
    /** Serial Version UID */
    private static final long serialVersionUID = 6664715201223933974L;
    
+   /** ID of the token */
    private final String m_id;
    
+   /**
+    * Constructor
+    * 
+    * @param p_id
+    * 	ID of the session
+    */
    public SessionToken(String p_id)
    {
       m_id = p_id;
    }
    
+   /**
+    * Constructor
+    */
    public SessionToken()
    {
       this(UUID.randomUUID().toString());
@@ -40,8 +51,6 @@ public class SessionToken implements Serializable
       result = prime * result + ((m_id == null) ? 0 : m_id.hashCode());
       return result;
    }
-
-
 
    /**
     * @see java.lang.Object#equals(java.lang.Object)

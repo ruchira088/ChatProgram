@@ -80,7 +80,7 @@ public class ChatServer
 	 */
 	public boolean isExistingUsername(String p_username) throws Exception
 	{
-		boolean exists = getTokenMap().get(p_username) == null ? false : true;
+		boolean exists = getTokenMap().get(p_username) != null;
 
 		if (!exists)
 		{
@@ -91,9 +91,9 @@ public class ChatServer
 	}
 
 	/**
-	 * getTokenMap description
+	 * Gets the token map
 	 * 
-	 * @return
+	 * @return The token map
 	 */
 	private static Map<String, SessionToken> getTokenMap()
 	{

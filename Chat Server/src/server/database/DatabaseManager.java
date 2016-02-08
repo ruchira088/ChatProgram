@@ -34,9 +34,13 @@ public class DatabaseManager
    
    private static Connection getConnection() throws ClassNotFoundException, SQLException
    {
+	   try{
       // Register the DB driver class
       Class.forName(Database.DB_DRIVER);
-
+	   } catch(ClassNotFoundException classNotFoundException)
+	   {
+		   System.out.println(classNotFoundException.getMessage());
+	   }
       // Get a connection from the database
       return DriverManager.getConnection(Database.DB_URL, Database.DB_USERNAME, Database.DB_PASSWORD);
    }

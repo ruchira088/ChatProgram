@@ -6,18 +6,57 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ *  Represents a message 
+ */
 public class Message<T> implements Serializable
 {
 	/** Serial Version UID */
 	private static final long serialVersionUID = 8456390073132426548L;
 
+	/** Contents of the message */
 	private T m_messageContents;
 
+	/** Timestamp of the message */
 	private Timestamp m_sentTimeStamp;
 
+	/** Sender */
 	private String m_sender;
 
+	/** Receiver */
 	private String m_receiver;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param p_messageContents
+	 * 	Message contents
+	 * @param p_sentDate
+	 * 	Sent date
+	 * @param p_receiver
+	 *  Receiver for the message
+	 */
+	public Message(T p_messageContents, Date p_sentDate, String p_receiver)
+	{
+		this(p_messageContents, new Timestamp(p_sentDate.getTime()), p_receiver);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param p_messageContents
+	 * 	Message contents
+	 * @param p_timestamp
+	 * 	{@link Timestamp} of the sent date
+	 * @param p_receiver
+	 * 	Receiver for the message
+	 */
+	public Message(T p_messageContents, Timestamp p_timestamp, String p_receiver)
+	{
+		m_messageContents = p_messageContents;
+		m_receiver = p_receiver;
+		m_sentTimeStamp = p_timestamp;;
+	}
 
 	/**
 	 * Get messageContents
@@ -49,6 +88,11 @@ public class Message<T> implements Serializable
 		return m_sender;
 	}
 
+	/**
+	 * Set the sender
+	 * 
+	 * @param p_sender The sender
+	 */
 	public void setSender(String p_sender)
 	{
 		m_sender = p_sender;
@@ -122,7 +166,7 @@ public class Message<T> implements Serializable
 			return false;
 		return true;
 	}
-		
+
 	@Override
 	public String toString()
 	{
@@ -130,6 +174,14 @@ public class Message<T> implements Serializable
 				+ ", \"sender\" : \"" + m_sender + "\", \"receiver\" : \"" + m_receiver + "\"}";
 	}
 	
+	/**
+	 * Converts the passed-in {@link Timestamp} to a {@link String} representing a JSON object.
+	 * 
+	 * @param p_timestamp
+	 * 	{@link Timestamp} object
+	 * @return
+	 * 	JSON representation of the {@link Timestamp}
+	 */
 	private String getJsonFromTimeStamp(Timestamp p_timestamp)
 	{
 		Calendar calendar = Calendar.getInstance();
@@ -147,17 +199,5 @@ public class Message<T> implements Serializable
 				minutes + "\", \"Seconds\" : \"" + seconds + "\"}";
 		
 		return Json;
-	}
-
-	public Message(T p_messageContents, Date p_sentDate, String p_receiver)
-	{
-		this(p_messageContents, new Timestamp(p_sentDate.getTime()), p_receiver);
-	}
-
-	public Message(T p_messageContents, Timestamp p_timestamp, String p_receiver)
-	{
-		m_messageContents = p_messageContents;
-		m_receiver = p_receiver;
-		m_sentTimeStamp = p_timestamp;;
 	}
 }

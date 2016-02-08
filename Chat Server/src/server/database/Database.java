@@ -25,6 +25,9 @@ import server.database.DatabaseQuery.Condition;
 import server.database.DatabaseQuery.Table;
 import server.database.DatabaseQuery.Type;
 
+/**
+ * Represents the database
+ */
 public class Database
 {
 	/** Database driver class */
@@ -49,10 +52,25 @@ public class Database
 		DatabaseManager.initializeTables();
 	}
 	
+	/**
+	 * The interface specifying an attribute which can be searched in the database.
+	 */
 	public interface SearchableAttribute
 	{
+		/**
+		 * Gets the attribute name
+		 * 
+		 * @return
+		 * 	The attribute name
+		 */
 		public String getAttribute();
 		
+		/**
+		 * Checks whether the attribute value is a {@link String} value.
+		 * 
+		 * @return
+		 * 	{@code true} if the attribute value is a {@link String}, and {@code false} if otherwise.
+		 */
 		public boolean isStringValue();
 	}
 
@@ -80,7 +98,7 @@ public class Database
 		{
 			return this.name();
 		}
-
+		
 		@Override
 		public boolean isStringValue()
 		{
