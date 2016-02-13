@@ -3,7 +3,10 @@ package general;
 import java.io.Serializable;
 import java.util.UUID;
 
-/** This class represents a session token */
+/** 
+ * This class represents a session token.
+ * 
+ */
 public class SessionToken implements Serializable
 {
    /** Serial Version UID */
@@ -32,7 +35,8 @@ public class SessionToken implements Serializable
    }
 
    /**
-    * Get id
+    * Gets the id
+    * 
     * @return the id
     */
    public String getId()
@@ -41,7 +45,7 @@ public class SessionToken implements Serializable
    }
 
    /**
-    * @see java.lang.Object#hashCode()
+    * {@inheritDoc}
     */
    @Override
    public int hashCode()
@@ -53,7 +57,7 @@ public class SessionToken implements Serializable
    }
 
    /**
-    * @see java.lang.Object#equals(java.lang.Object)
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(Object obj)

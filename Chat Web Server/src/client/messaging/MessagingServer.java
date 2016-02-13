@@ -21,6 +21,11 @@ import server.ChatServer;
 @WebServlet("/messageServer")
 public class MessagingServer extends HttpServlet
 {
+	/**
+	 * The serial version UID
+	 */
+	private static final long serialVersionUID = 4221158312136361424L;
+
 	// TODO Think about concurrent logins (different users) with same the cookie space. What are the implications ??
 	@Override
 	protected void doPost(HttpServletRequest p_request, HttpServletResponse p_response)

@@ -4,141 +4,202 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ * This class represents a user.
  */
 public class User implements Comparable<User>
 {
-   private String m_username;
+	/** The username */
+	private String m_username;
 
-   private String m_password;
-   
-   private Map<UserAttributes, String> m_attributes;
+	/** The password */
+	private String m_password;
 
-   public enum UserAttributes
-   {
-      NAME, GENDER, PROFILE_PICTURE_PATH;
-   }   
+	/** User attributes */
+	private Map<UserAttributes, String> m_attributes;
 
-   public User(String p_username, String p_password)
-   {
-      this(p_username, p_password, new HashMap<UserAttributes, String>());
-   }
-   
-   public User(String p_username, Map<UserAttributes, String> p_attributes)
-   {
-      this(p_username, null, p_attributes);
-   }
-   
-   public User(String p_username, String p_password, Map<UserAttributes, String> p_attributes)
-   {
-      setUsername(p_username);
-      setPassword(p_password);
-      setAttributes(p_attributes);
-   }
+	/**
+	 * User attributes
+	 */
+	public enum UserAttributes
+	{
+		NAME, GENDER, PROFILE_PICTURE_PATH;
+	}
 
-  
-   
-   /**
-    * Set attributes
-    * @param p_attributes the attributes to set
-    */
-   public void setAttributes(Map<UserAttributes, String> p_attributes)
-   {
-      m_attributes = p_attributes;
-   }
+	/**
+	 * Constructor
+	 * 
+	 * @param p_username
+	 *            The username of the user
+	 * @param p_password
+	 *            The password of the user
+	 */
+	public User(String p_username, String p_password)
+	{
+		this(p_username, p_password, new HashMap<UserAttributes, String>());
+	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param p_username
+	 *            The username of the user
+	 * @param p_attributes
+	 *            The attributes of the user
+	 */
+	public User(String p_username, Map<UserAttributes, String> p_attributes)
+	{
+		this(p_username, null, p_attributes);
+	}
 
-   public Map<UserAttributes, String> getAttributes()
-   {
-      return m_attributes;
-   }
+	/**
+	 * Constructor
+	 * 
+	 * @param p_username
+	 *            The username of the user
+	 * @param p_password
+	 *            The password of the user
+	 * @param p_attributes
+	 *            The attributes of the user
+	 */
+	public User(String p_username, String p_password, Map<UserAttributes, String> p_attributes)
+	{
+		setUsername(p_username);
+		setPassword(p_password);
+		setAttributes(p_attributes);
+	}
 
-   public void setAttribute(UserAttributes p_attribute, String p_value)
-   {   
-      m_attributes.put(p_attribute, p_value);
-   }
-   
-   public String getAttribute(UserAttributes p_userAttribute)
-   {
-      String attribute = null;
-      
-      if(getAttributes() != null)
-      {
-         attribute = getAttributes().get(p_userAttribute);
-      }
-      return attribute;
-   }
-   
-   /**
-    * Get username
-    * @return the username
-    */
-   public String getUsername()
-   {
-      return m_username;
-   }
+	/**
+	 * Sets user attributes
+	 * 
+	 * @param p_attributes
+	 *            The attributes to set
+	 */
+	public void setAttributes(Map<UserAttributes, String> p_attributes)
+	{
+		m_attributes = p_attributes;
+	}
 
-   /**
-    * Set username
-    * @param p_username the username to set
-    */
-   public void setUsername(String p_username)
-   {
-      m_username = p_username;
-   }
+	/**
+	 * Gets the attributes of the user.
+	 * 
+	 * @return The attributes of the user
+	 */
+	public Map<UserAttributes, String> getAttributes()
+	{
+		return m_attributes;
+	}
 
-   /**
-    * Get password
-    * @return the password
-    */
-   public String getPassword()
-   {
-      return m_password;
-   }
+	/**
+	 * Sets an attribute of the user.
+	 * 
+	 * @param p_attribute
+	 *            The attribute to set.
+	 * @param p_value
+	 *            The value of the attribute
+	 */
+	public void setAttribute(UserAttributes p_attribute, String p_value)
+	{
+		m_attributes.put(p_attribute, p_value);
+	}
 
-   /**
-    * Set password
-    * @param p_password the password to set
-    */
-   public void setPassword(String p_password)
-   {
-      m_password = p_password;
-   }
+	/**
+	 * Gets an attribute of the user.
+	 * 
+	 * @param p_userAttribute
+	 *            The attribute to get.
+	 * 
+	 * @return The value of the attribute
+	 */
+	public String getAttribute(UserAttributes p_userAttribute)
+	{
+		String attribute = null;
 
-   /**
-    * Get name
-    * @return the name
-    */
-   public String getName()
-   {
-      String name;
-      
-      if(getAttributes() != null && getAttributes().containsKey(UserAttributes.NAME))
-      {
-         name = getAttributes().get(UserAttributes.NAME);
-      } else 
-      {
-         name = getUsername();
-      }
-      return name;
-   }
+		if (getAttributes() != null)
+		{
+			attribute = getAttributes().get(p_userAttribute);
+		}
+		return attribute;
+	}
 
-   /**
-    * Set name
-    * @param p_name the name to set
-    */
-   public void setName(String p_name)
-   {
-      getAttributes().put(UserAttributes.NAME, p_name);
-   }
+	/**
+	 * Gets the username.
+	 * 
+	 * @return the username
+	 */
+	public String getUsername()
+	{
+		return m_username;
+	}
 
-   /**
-    * @see java.lang.Comparable#compareTo(java.lang.Object)
-    */
-   @Override
-   public int compareTo(User p_user)
-   {     
-      return getName().compareToIgnoreCase(p_user.getName());
-   }
+	/**
+	 * Sets the username.
+	 * 
+	 * @param p_username
+	 *            The username to set
+	 */
+	public void setUsername(String p_username)
+	{
+		m_username = p_username;
+	}
+
+	/**
+	 * Gets the password.
+	 * 
+	 * @return The password
+	 */
+	public String getPassword()
+	{
+		return m_password;
+	}
+
+	/**
+	 * Sets the password.
+	 * 
+	 * @param p_password
+	 *            The password to set
+	 */
+	public void setPassword(String p_password)
+	{
+		m_password = p_password;
+	}
+
+	/**
+	 * Gets the name of the user.
+	 * 
+	 * @return The name of the user
+	 */
+	public String getName()
+	{
+		String name;
+
+		if (getAttributes() != null && getAttributes().containsKey(UserAttributes.NAME))
+		{
+			name = getAttributes().get(UserAttributes.NAME);
+		} else
+		{
+			name = getUsername();
+		}
+		return name;
+	}
+
+	/**
+	 * Sets the name of the user
+	 * 
+	 * @param p_name
+	 *            The name to set
+	 */
+	public void setName(String p_name)
+	{
+		getAttributes().put(UserAttributes.NAME, p_name);
+	}
+
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(User p_user)
+	{
+		return getName().compareToIgnoreCase(p_user.getName());
+	}
 
 }

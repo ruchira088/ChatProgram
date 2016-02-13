@@ -9,6 +9,4 @@ public class DatabaseQueryCreator
 		
 		return databaseQuery;
 	}
-
-	
 }

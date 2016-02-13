@@ -26,7 +26,7 @@ import server.database.DatabaseQuery.Table;
 import server.database.DatabaseQuery.Type;
 
 /**
- * Represents the database
+ * This class represents the database.
  */
 public class Database
 {
@@ -46,30 +46,30 @@ public class Database
 
 	/**
 	 * If the database tables don't exist, create the tables.
-	 */ 
+	 */
 	static
 	{
 		DatabaseManager.initializeTables();
 	}
-	
+
 	/**
-	 * The interface specifying an attribute which can be searched in the database.
+	 * The interface specifying an attribute which can be searched in the
+	 * database.
 	 */
 	public interface SearchableAttribute
 	{
 		/**
 		 * Gets the attribute name
 		 * 
-		 * @return
-		 * 	The attribute name
+		 * @return The attribute name
 		 */
 		public String getAttribute();
-		
+
 		/**
 		 * Checks whether the attribute value is a {@link String} value.
 		 * 
-		 * @return
-		 * 	{@code true} if the attribute value is a {@link String}, and {@code false} if otherwise.
+		 * @return {@code true} if the attribute value is a {@link String}, and
+		 *         {@code false} if otherwise.
 		 */
 		public boolean isStringValue();
 	}
@@ -80,30 +80,46 @@ public class Database
 	public enum UserTableColumns implements SearchableAttribute
 	{
 		USERNAME, PASSWORD, ATTRIBUTES;
-		
+
+		/** Indicates whether the value is a {@link String} value */
 		private boolean m_isStringValue;
 
+		/**
+		 * Constructor
+		 */
 		private UserTableColumns()
 		{
 			this(true);
 		}
-		
+
+		/**
+		 * Constructor
+		 * 
+		 * @param p_isStringValue
+		 *            Indicates whether the value is a {@link String} value
+		 */
 		private UserTableColumns(boolean p_isStringValue)
 		{
 			m_isStringValue = p_isStringValue;
 		}
-		
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public String getAttribute()
 		{
 			return this.name();
 		}
-		
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean isStringValue()
 		{
 			return m_isStringValue;
-		}		
+		}
 	}
 
 	/**
@@ -112,30 +128,46 @@ public class Database
 	public enum MessageTableColumns implements SearchableAttribute
 	{
 		TIMESTAMP(false), SENDER, RECEIVER, MESSAGE;
-		
+
+		/** Indicates whether the value is a {@link String} value */
 		private boolean m_isStringValue;
-		
+
+		/**
+		 * Constructor
+		 */
 		private MessageTableColumns()
 		{
 			this(true);
 		}
-		
+
+		/**
+		 * Constructor
+		 * 
+		 * @param p_isStringValue
+		 *            Indicates whether the value is a {@link String} value
+		 */
 		private MessageTableColumns(boolean p_isStringValue)
 		{
 			m_isStringValue = p_isStringValue;
 		}
-		
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public String getAttribute()
 		{
 			return this.name();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean isStringValue()
 		{
 			return m_isStringValue;
-		}	
+		}
 	}
 
 	/**
@@ -155,8 +187,7 @@ public class Database
 
 				// Get a connection from the database
 				m_connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			}
-			catch (Exception exception)
+			} catch (Exception exception)
 			{
 				throw new UnableToConnectToDatabaseException(DB_URL);
 			}
@@ -205,7 +236,7 @@ public class Database
 		prepareStatement.setString(2, p_password);
 		ResultSet resultSet = prepareStatement.executeQuery();
 
-		return covertResultSetToUser(resultSet);
+		return transformResultSetToUser(resultSet);
 	}
 
 	/**
@@ -223,9 +254,21 @@ public class Database
 		prepareStatement.setString(1, p_username);
 		ResultSet resultSet = prepareStatement.executeQuery();
 
-		return covertResultSetToUser(resultSet);
+		return transformResultSetToUser(resultSet);
 	}
 
+	/**
+	 * Adds an image into the database.
+	 * 
+	 * @param p_id
+	 *            ID of the image
+	 * @param p_name
+	 *            Name of the image
+	 * @param p_image
+	 *            Byte array containing the image
+	 * @throws SQLException
+	 * @throws UnableToConnectToDatabaseException
+	 */
 	public void addImage(String p_id, String p_name, byte[] p_image)
 			throws SQLException, UnableToConnectToDatabaseException
 	{
@@ -237,13 +280,22 @@ public class Database
 			preparedStatement.setString(2, p_name);
 			preparedStatement.setBlob(3, new ByteArrayInputStream(p_image));
 			preparedStatement.execute();
-		}
-		catch (Exception exception)
+		} catch (Exception exception)
 		{
 
 		}
 	}
 
+	/**
+	 * Gets an image from the database.
+	 * 
+	 * @param p_id
+	 *            ID of the image
+	 * @param p_name
+	 *            Name of the image
+	 * @return Byte array containing the image
+	 * @throws Exception
+	 */
 	public byte[] getImage(String p_id, String p_name) throws Exception
 	{
 		PreparedStatement preparedStatement = getConnection()
@@ -265,7 +317,15 @@ public class Database
 
 	}
 
-	private User covertResultSetToUser(ResultSet p_resultSet) throws Exception
+	/**
+	 * Transforms the result set into a {@link User} object.
+	 * 
+	 * @param p_resultSet
+	 *            The result set
+	 * @return The transformed {@link User} object
+	 * @throws Exception
+	 */
+	private User transformResultSetToUser(ResultSet p_resultSet) throws Exception
 	{
 		User user = null;
 
@@ -314,7 +374,16 @@ public class Database
 		return userExists;
 	}
 
-	public boolean sendMessage(Message<String> p_message)
+	/**
+	 * Adds a message into the message table
+	 * 
+	 * @param p_message
+	 *            The message
+	 * 
+	 * @return {@code true} if the message was successfully added, and
+	 *         {@code false} if otherwise.
+	 */
+	public boolean addMessage(Message<String> p_message)
 	{
 		boolean isSuccess = false;
 		try
@@ -329,8 +398,7 @@ public class Database
 			preparedStatement.execute();
 			preparedStatement.close();
 			isSuccess = true;
-		}
-		catch (Exception exception)
+		} catch (Exception exception)
 		{
 
 		}
@@ -338,37 +406,67 @@ public class Database
 		return isSuccess;
 
 	}
-	
-	public LinkedList<Message<String>> getIncomingAndOutgoingMessages(String p_receiver, String p_sender, Date p_date) throws Exception
+
+	/**
+	 * Fetches exchanged messages between 2 users after the passed-in date.
+	 * 
+	 * @param p_user_1
+	 *            Username of user 1
+	 * @param p_user_2
+	 *            Username of user 2
+	 * @param p_date
+	 *            The date
+	 * @return A {@link LinkedList} of messages exchanged between the 2 users
+	 *         ordered by sent time.
+	 * @throws Exception
+	 */
+	public LinkedList<Message<String>> getIncomingAndOutgoingMessages(String p_user_1, String p_user_2, Date p_date)
+			throws Exception
 	{
 		DatabaseQuery databaseQuery_1 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
-				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_receiver).And()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_user_1).And()
 				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
-				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_sender).getQuery();
-		
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_user_2).getQuery();
+
 		DatabaseQuery databaseQuery_2 = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
-				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_sender).And()
+				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_user_2).And()
 				.setSelector(MessageTableColumns.TIMESTAMP, Condition.GREATER_THAN, p_date).And()
-				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_receiver).getQuery();
-		
-		String query = databaseQuery_1 + " UNION " + databaseQuery_2 + " ORDER BY " + MessageTableColumns.TIMESTAMP.name();
-		
+				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_user_1).getQuery();
+
+		String query = databaseQuery_1 + " UNION " + databaseQuery_2 + " ORDER BY "
+				+ MessageTableColumns.TIMESTAMP.name();
+
 		PreparedStatement prepareStatement = getConnection().prepareStatement(query);
-		
-		if(p_date != null)
+
+		if (p_date != null)
 		{
 			Timestamp timestamp = new Timestamp(p_date.getTime());
 			prepareStatement.setTimestamp(1, timestamp);
-			prepareStatement.setTimestamp(2, timestamp); 
+			prepareStatement.setTimestamp(2, timestamp);
 		}
-		
+
 		ResultSet resultSet = prepareStatement.executeQuery();
 
-		return convertResultSetToMessageList(resultSet);		
-		
+		return convertResultSetToMessageList(resultSet);
+
 	}
 
-	public LinkedList<Message<String>> getIncomingMessages(String p_receiver, String p_sender, Date p_date) throws Exception
+	/**
+	 * Gets incoming messages for the receiver from sender after the passed-in
+	 * date.
+	 * 
+	 * @param p_receiver
+	 *            The username of the receiver
+	 * @param p_sender
+	 *            The username of the sender
+	 * @param p_date
+	 *            The date
+	 * @return A {@link LinkedList} of messages sent by the sender to the
+	 *         receiver
+	 * @throws Exception
+	 */
+	public LinkedList<Message<String>> getIncomingMessages(String p_receiver, String p_sender, Date p_date)
+			throws Exception
 	{
 		DatabaseQuery databaseQuery = DatabaseQueryCreator.setTable(Table.MESSAGES).setType(Type.SELECT).where()
 				.setSelector(MessageTableColumns.RECEIVER, Condition.EQUALS, p_receiver).And()
@@ -376,42 +474,26 @@ public class Database
 				.setSelector(MessageTableColumns.SENDER, Condition.EQUALS, p_sender).getQuery();
 
 		PreparedStatement prepareStatement = getConnection().prepareStatement(databaseQuery.toString());
-		
-		if(p_date != null)
+
+		if (p_date != null)
 		{
 			prepareStatement.setTimestamp(1, new Timestamp(p_date.getTime()));
 		}
-		
+
 		ResultSet resultSet = prepareStatement.executeQuery();
 
-		return convertResultSetToMessageList(resultSet);		
+		return convertResultSetToMessageList(resultSet);
 	}
-	
-//	public LinkedList<Message<String>> getMessages(DatabaseQuery p_databaseQuery, Map<SearchableAttribute, Object> p_nonStringValues) throws Exception
-//	{
-//		PreparedStatement prepareStatement = getConnection().prepareStatement(p_databaseQuery.toString());
-//				
-//		for (SearchableAttribute searchableAttribute : p_nonStringValues.keySet())
-//		{
-//			QueryAnalyzer queryAnalyzer = p_databaseQuery.analyze();
-//
-//			if(queryAnalyzer.hasSelector(searchableAttribute))
-//			{
-//				int position = queryAnalyzer.getPosition(searchableAttribute);
-//				
-//				if(searchableAttribute.equals(MessageTableColumns.TIMESTAMP))
-//				{
-//					prepareStatement.setTimestamp(position, (Timestamp) p_nonStringValues.get(searchableAttribute)); 
-//				}
-//			}
-//		}
-//
-//		ResultSet resultSet = prepareStatement.executeQuery();
-//
-//		return convertResultSetToMessageList(resultSet);
-//	}
 
-	public LinkedList<Message<String>> getSentMessages(String p_sender, Timestamp p_timestamp) throws Exception
+	/**
+	 * Fetches messages sent by a user.
+	 * 
+	 * @param p_sender
+	 *            The username
+	 * @return A {@link LinkedList} of messages sent by the user
+	 * @throws Exception
+	 */
+	public LinkedList<Message<String>> getSentMessages(String p_sender) throws Exception
 	{
 		PreparedStatement prepareStatement = getConnection()
 				.prepareStatement("SELECT * FROM MESSAGES_TABLE WHERE SENDER = ?");

@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *  Represents a message 
+ * This class represents a message.
  */
 public class Message<T> implements Serializable
 {
@@ -25,16 +25,16 @@ public class Message<T> implements Serializable
 
 	/** Receiver */
 	private String m_receiver;
-	
+
 	/**
 	 * Constructor
 	 * 
 	 * @param p_messageContents
-	 * 	Message contents
+	 *            Message contents
 	 * @param p_sentDate
-	 * 	Sent date
+	 *            Sent date
 	 * @param p_receiver
-	 *  Receiver for the message
+	 *            Receiver for the message
 	 */
 	public Message(T p_messageContents, Date p_sentDate, String p_receiver)
 	{
@@ -45,23 +45,24 @@ public class Message<T> implements Serializable
 	 * Constructor
 	 * 
 	 * @param p_messageContents
-	 * 	Message contents
+	 *            Message contents
 	 * @param p_timestamp
-	 * 	{@link Timestamp} of the sent date
+	 *            {@link Timestamp} of the sent date
 	 * @param p_receiver
-	 * 	Receiver for the message
+	 *            Receiver for the message
 	 */
 	public Message(T p_messageContents, Timestamp p_timestamp, String p_receiver)
 	{
 		m_messageContents = p_messageContents;
 		m_receiver = p_receiver;
-		m_sentTimeStamp = p_timestamp;;
+		m_sentTimeStamp = p_timestamp;
+		;
 	}
 
 	/**
-	 * Get messageContents
+	 * Gets the message contents.
 	 * 
-	 * @return the messageContents
+	 * @return The message contents
 	 */
 	public T getMessageContents()
 	{
@@ -69,9 +70,9 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * Get sentDate
+	 * Gets the sent date.
 	 * 
-	 * @return the sentDate
+	 * @return The sent date
 	 */
 	public Timestamp getSentTimeStamp()
 	{
@@ -79,7 +80,7 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * Get sender
+	 * Gets the sender.
 	 * 
 	 * @return the sender
 	 */
@@ -89,9 +90,10 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * Set the sender
+	 * Sets the sender.
 	 * 
-	 * @param p_sender The sender
+	 * @param p_sender
+	 *            The sender
 	 */
 	public void setSender(String p_sender)
 	{
@@ -99,9 +101,9 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * Get receiver
+	 * Gets the receiver.
 	 * 
-	 * @return the receiver
+	 * @return The receiver
 	 */
 	public String getReceiver()
 	{
@@ -109,7 +111,7 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode()
@@ -124,7 +126,7 @@ public class Message<T> implements Serializable
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj)
@@ -140,64 +142,64 @@ public class Message<T> implements Serializable
 		{
 			if (other.m_messageContents != null)
 				return false;
-		}
-		else if (!m_messageContents.equals(other.m_messageContents))
+		} else if (!m_messageContents.equals(other.m_messageContents))
 			return false;
 		if (m_receiver == null)
 		{
 			if (other.m_receiver != null)
 				return false;
-		}
-		else if (!m_receiver.equals(other.m_receiver))
+		} else if (!m_receiver.equals(other.m_receiver))
 			return false;
 		if (m_sender == null)
 		{
 			if (other.m_sender != null)
 				return false;
-		}
-		else if (!m_sender.equals(other.m_sender))
+		} else if (!m_sender.equals(other.m_sender))
 			return false;
 		if (m_sentTimeStamp == null)
 		{
 			if (other.m_sentTimeStamp != null)
 				return false;
-		}
-		else if (!m_sentTimeStamp.equals(other.m_sentTimeStamp))
+		} else if (!m_sentTimeStamp.equals(other.m_sentTimeStamp))
 			return false;
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString()
 	{
-		return "{\"messageContents\" : \"" + m_messageContents + "\", \"time\" : " + getJsonFromTimeStamp(m_sentTimeStamp)
-				+ ", \"sender\" : \"" + m_sender + "\", \"receiver\" : \"" + m_receiver + "\"}";
+		return "{\"messageContents\" : \"" + m_messageContents + "\", \"time\" : "
+				+ getJsonFromTimeStamp(m_sentTimeStamp) + ", \"sender\" : \"" + m_sender + "\", \"receiver\" : \""
+				+ m_receiver + "\"}";
 	}
-	
+
 	/**
-	 * Converts the passed-in {@link Timestamp} to a {@link String} representing a JSON object.
+	 * Converts the passed-in {@link Timestamp} to a {@link String} representing
+	 * a JSON object.
 	 * 
 	 * @param p_timestamp
-	 * 	{@link Timestamp} object
-	 * @return
-	 * 	JSON representation of the {@link Timestamp}
+	 *            {@link Timestamp} object
+	 * @return JSON representation of the {@link Timestamp}
 	 */
 	private String getJsonFromTimeStamp(Timestamp p_timestamp)
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(p_timestamp.getTime());
-		
+
 		int year = calendar.get(Calendar.YEAR);
 		String month = new SimpleDateFormat("MMM").format(p_timestamp);
 		int day = calendar.get(Calendar.DATE);
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minutes = calendar.get(Calendar.MINUTE);
 		int seconds = calendar.get(Calendar.SECOND);
-		
-		String Json = "{ \"Year\" : \"" + year + "\", \"Month\" : \"" + month + 
-				"\", \"Day\" : \"" + day + "\", \"Hour\" : \"" + hour + "\", \"Minutes\" :\"" +
-				minutes + "\", \"Seconds\" : \"" + seconds + "\"}";
-		
+
+		String Json = "{ \"Year\" : \"" + year + "\", \"Month\" : \"" + month + "\", \"Day\" : \"" + day
+				+ "\", \"Hour\" : \"" + hour + "\", \"Minutes\" :\"" + minutes + "\", \"Seconds\" : \"" + seconds
+				+ "\"}";
+
 		return Json;
 	}
 }
